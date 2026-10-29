@@ -1,0 +1,35 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug CacheData",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}\\bin\\Debug\\cacheData\\CacheData.exe",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "enableStepFiltering": false,
+      "stopAtEntry": false,
+      "preLaunchTask": "build CacheData",
+      "logging": {
+        "moduleLoad": false
+      }
+    },
+    {
+      "name": "Debug ParseReviewedData",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}\\bin\\Debug\\parseReviewedData\\ParseReviewedData.exe",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "enableStepFiltering": false,
+      "stopAtEntry": false,
+      "preLaunchTask": "build ParseReviewedData",
+      "logging": {
+        "moduleLoad": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Message Reviewer</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font: 14px system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      background: #17191c;
+      color: #e8eaed;
+    }
+
+    header {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid #3a3f45;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin: 0 16px 0 0;
+    }
+
+    button,
+    input {
+      border: 1px solid #555d66;
+      border-radius: 5px;
+      background: #252a30;
+      color: inherit;
+      padding: 7px 10px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #343b43;
+    }
+
+    button:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+
+    #search {
+      width: min(420px, 42vw);
+    }
+
+    #status {
+      color: #aeb7c2;
+      margin-left: auto;
+    }
+
+    main {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(420px, 55%) 1fr;
+    }
+
+    #list {
+      overflow: auto;
+      border-right: 1px solid #3a3f45;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 58px 180px 1fr auto;
+      gap: 10px;
+      padding: 9px 12px;
+      border-bottom: 1px solid #2d3238;
+      cursor: pointer;
+    }
+
+    .row:hover {
+      background: #242a30;
+    }
+
+    .row.selected {
+      background: #164b70;
+    }
+
+    .index,
+    .date {
+      color: #aeb7c2;
+      white-space: nowrap;
+    }
+
+    .user {
+      font-weight: 650;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .text {
+      grid-column: 2 / 4;
+      color: #d2d7dd;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .row-delete {
+      align-self: center;
+      padding: 4px 8px;
+    }
+
+    .has-note .user::after {
+      content: "  • note";
+      color: #ffd166;
+      font-weight: 400;
+      font-size: 12px;
+    }
+
+    #details {
+      min-width: 0;
+      overflow: auto;
+      padding: 24px;
+    }
+
+    #details h2 {
+      margin-top: 0;
+    }
+
+    .field {
+      margin: 16px 0;
+    }
+
+    .label {
+      color: #9da8b4;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    #full-text {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.5;
+    }
+
+    #note {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+      font: inherit;
+      margin-top: 6px;
+    }
+
+    .note-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .danger {
+      border-color: #b94a48;
+    }
+
+    #empty {
+      padding: 30px;
+      color: #aeb7c2;
+    }
+
+    @media (max-width: 800px) {
+      main {
+        grid-template-columns: 1fr;
+        grid-template-rows: 55% 45%;
+      }
+
+      #list {
+        border-right: 0;
+        border-bottom: 1px solid #3a3f45;
+      }
+
+      #status {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Message Reviewer</h1>
+    <label>Open JSON <input id="file" type="file" accept=".json,application/json"></label>
+    <input id="search" type="search" placeholder="Search user, text, date, or note..." disabled>
+    <button id="save" disabled>Download reviewed JSON</button>
+    <span id="status">Open raw_messages.json to begin</span>
+  </header>
+  <main>
+    <section id="list">
+      <div id="empty">Choose raw_messages.json above. Use the list scrollbar or search to move quickly through the
+        entries.</div>
+    </section>
+    <section id="details">
+      <h2>Select a message</h2>
+      <p>Click a row on the left to inspect its complete text, delete it, or add a note.</p>
+    </section>
+  </main>
+  <script>
+    let messages = [], selected = -1, visible = [];
+    const $ = id => document.getElementById(id);
+    $('file').addEventListener('change', async event => {
+      const file = event.target.files[0]; if (!file) return;
+      try {
+        const parsed = JSON.parse(await file.text());
+        if (!Array.isArray(parsed)) throw new Error('The JSON root must be an array.');
+        messages = parsed.map(message => ({
+          ...message,
+          Note: typeof message.Note === 'string' ? message.Note : '',
+          Inverse: message.Inverse === true
+        }));
+        selected = messages.length ? 0 : -1;
+        $('search').disabled = $('save').disabled = false;
+        render();
+      } catch (error) { alert(`Could not load JSON: ${error.message}`); }
+    });
+    $('search').addEventListener('input', () => { selected = -1; render(); });
+    $('save').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(messages, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a'); link.href = URL.createObjectURL(blob);
+      link.download = 'reviewed_messages.json'; link.click(); URL.revokeObjectURL(link.href);
+    });
+    function render() {
+      const query = $('search').value.trim().toLowerCase();
+      visible = messages.map((message, index) => ({ message, index })).filter(({ message }) =>
+        !query || JSON.stringify(message).toLowerCase().includes(query));
+      $('status').textContent = `${visible.length.toLocaleString()} shown / ${messages.length.toLocaleString()} total`;
+      $('list').replaceChildren();
+      if (!visible.length) { $('list').innerHTML = '<div id="empty">No matching entries.</div>'; renderDetails(); return; }
+      const fragment = document.createDocumentFragment();
+      visible.forEach(({ message, index }) => {
+        const row = document.createElement('div'); row.className = `row ${message.Note ? 'has-note' : ''} ${index === selected ? 'selected' : ''}`;
+        row.innerHTML = `<span class="index">#${index + 1}</span><span class="user"></span><span class="date"></span><span class="text"></span><button class="row-delete danger" type="button">Delete</button>`;
+        row.querySelector('.user').textContent = message.User || '(unknown)';
+        row.querySelector('.date').textContent = message.Timestamp || '';
+        row.querySelector('.text').textContent = renderEmojis(message.Text || '');
+        row.onclick = () => { selected = index; render(); };
+        row.querySelector('.row-delete').onclick = event => {
+          event.stopPropagation();
+          messages.splice(index, 1);
+          selected = selected === index ? Math.min(index, messages.length - 1) : selected > index ? selected - 1 : selected;
+          render();
+        };
+        fragment.append(row);
+      });
+      $('list').append(fragment); renderDetails();
+      if (selected >= 0) $('list').querySelector('.selected')?.scrollIntoView({ block: 'nearest' });
+    }
+    function renderDetails() {
+      const message = messages[selected];
+      if (!message) { $('details').innerHTML = '<h2>Select a message</h2><p>Choose a row to inspect it.</p>'; return; }
+      $('details').innerHTML = `<h2>Entry #${selected + 1}</h2>
+        <div class="field"><div class="label">User</div><div>${escapeHtml(message.User || '(unknown)')}</div></div>
+        <div class="field"><div class="label">Timestamp</div><div>${escapeHtml(message.Timestamp || '')}</div></div>
+        <div class="field"><div class="label">Full message</div><div id="full-text">${escapeHtml(renderEmojis(message.Text || ''))}</div></div>
+        <div class="field"><div class="note-header"><label class="label" for="note">Note</label>
+          <label><input id="inverse" type="checkbox"${message.Inverse ? ' checked' : ''}> Inverse</label></div>
+          <textarea id="note" placeholder="Optional note...">${escapeHtml(message.Note || '')}</textarea>
+        </div>
+        <div class="actions"><button id="save-note">Save note</button><button id="delete" class="danger">Delete entry</button></div>`;
+      $('save-note').onclick = () => {
+        const note = $('note').value.trim();
+        message.Note = note;
+        message.Inverse = $('inverse').checked;
+        render();
+      };
+      $('delete').onclick = () => { messages.splice(selected, 1); selected = Math.min(selected, messages.length - 1); render(); };
+    }
+    function escapeHtml(value) { return String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character])); }
+    function renderEmojis(value) { return String(value).replaceAll(":large_green_square:", "🟩").replaceAll(":large_red_square:", "🟥"); }
+  </script>
+</body>
+
+</html>

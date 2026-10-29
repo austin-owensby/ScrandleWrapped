@@ -1,0 +1,43 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build CacheData",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}\\CacheData.cs",
+        "--configuration",
+        "Debug",
+        "--no-restore",
+        "--output",
+        "${workspaceFolder}\\bin\\Debug\\cacheData"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "build ParseReviewedData",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}\\ParseReviewedData.cs",
+        "--configuration",
+        "Debug",
+        "--no-restore",
+        "--output",
+        "${workspaceFolder}\\bin\\Debug\\parseReviewedData"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
