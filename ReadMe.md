@@ -34,6 +34,5 @@ This outputs a `parsed_messages.json` file.
 
 ## TODO
 
-- Update scripts to account for in progress data so that I don't have to do everything fresh on November 30th.
 - Analyze data and start generating statistics
 - Build a GitHub site to display data and show personalized stats

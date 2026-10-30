@@ -9,9 +9,25 @@ string fileContents = File.ReadAllText("reviewed_messages.json");
 List<ReviewedMessage> reviewedMessages = JsonSerializer.Deserialize(fileContents, ReviewedJsonContext.Default.ListReviewedMessage) ?? [];
 
 List<ParsedMessage> parsedMessages = [];
+DateTimeOffset? latest = null;
+
+// Check if we already have data and add on to it
+if (File.Exists("parsed_messages.json"))
+{
+    fileContents = File.ReadAllText("parsed_messages.json");
+    parsedMessages = JsonSerializer.Deserialize(fileContents, ParsedJsonContext.Default.ListParsedMessage) ?? [];
+
+    latest = parsedMessages.First().Timestamp;
+}
 
 foreach (ReviewedMessage message in reviewedMessages)
 {
+    // Only parse data we haven't parsed before
+    if (message.Timestamp == latest)
+    {
+        break;
+    }
+
     ParsedMessage parsedMessage = new()
     {
         DeletedUser = message.DeletedUser,
@@ -63,7 +79,7 @@ foreach (ReviewedMessage message in reviewedMessages)
     parsedMessages.Add(parsedMessage);
 }
 
-File.WriteAllText("parsed_messages.json", JsonSerializer.Serialize(parsedMessages, ParsedJsonContext.Default.ListParsedMessage));
+File.WriteAllText("parsed_messages.json", JsonSerializer.Serialize(parsedMessages.OrderByDescending(m => m.Timestamp).ToList(), ParsedJsonContext.Default.ListParsedMessage));
 
 class ReviewedMessage
 {

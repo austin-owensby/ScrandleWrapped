@@ -22,13 +22,20 @@ Dictionary<string, string> userLookup = users.ToDictionary(u => u.ID, u => u.Pro
 
 bool keepParsing = true;
 List<ParsedMessage> messages = [];
-int requestCount = 0;
-int messageCount = 0;
+DateTimeOffset? latest = null;
+
+// Check if we already have data and add on to it
+if (File.Exists("raw_messages.json"))
+{
+    string fileContents = File.ReadAllText("raw_messages.json");
+    messages = JsonSerializer.Deserialize(fileContents, OutputJsonContext.Default.ListParsedMessage) ?? [];
+
+    latest = messages.First().Timestamp;
+}
 
 do
 {
     SlackResponse response = await slackGateway.GetNextSetOfData();
-    requestCount++;
 
     foreach (Message message in response.Messages)
     {
@@ -37,8 +44,6 @@ do
             // Ignore Scrandlebot and Slackbot
             continue;
         }
-
-        messageCount++;
 
         if (double.TryParse(message.TS, out double parsedTimestamp))
         {
@@ -51,7 +56,7 @@ do
                 Timestamp = DateTimeOffset.FromUnixTimeSeconds((long)parsedTimestamp).ToLocalTime()
             };
 
-            if (parsedMessage.Timestamp.Year < DateTimeOffset.Now.Year)
+            if (parsedMessage.Timestamp.Year < DateTimeOffset.Now.Year || parsedMessage.Timestamp == latest)
             {
                 // Only parse this year
                 keepParsing = false;
@@ -68,7 +73,7 @@ do
 }
 while (keepParsing);
 
-File.WriteAllText("raw_messages.json", JsonSerializer.Serialize(messages, OutputJsonContext.Default.ListParsedMessage));
+File.WriteAllText("raw_messages.json", JsonSerializer.Serialize(messages.OrderByDescending(m => m.Timestamp).ToList(), OutputJsonContext.Default.ListParsedMessage));
 
 class ParsedMessage
 {

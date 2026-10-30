@@ -8,9 +8,6 @@
       "program": "${workspaceFolder}\\bin\\Debug\\cacheData\\CacheData.exe",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
-      "justMyCode": false,
-      "enableStepFiltering": false,
-      "stopAtEntry": false,
       "preLaunchTask": "build CacheData",
       "logging": {
         "moduleLoad": false
@@ -23,9 +20,6 @@
       "program": "${workspaceFolder}\\bin\\Debug\\parseReviewedData\\ParseReviewedData.exe",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
-      "justMyCode": false,
-      "enableStepFiltering": false,
-      "stopAtEntry": false,
       "preLaunchTask": "build ParseReviewedData",
       "logging": {
         "moduleLoad": false
