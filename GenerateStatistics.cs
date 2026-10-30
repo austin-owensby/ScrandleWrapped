@@ -3,7 +3,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-string fileContents = File.ReadAllText("parsed_messages.json");
+string fileContents = File.ReadAllText("data/parsed_messages.json");
 List<ParsedMessage> parsedMessages = JsonSerializer.Deserialize(fileContents, ParsedJsonContext.Default.ListParsedMessage) ?? [];
 
 Statistics statistics = new();
@@ -80,7 +80,7 @@ foreach (string user in users)
     statistics.PlayerStatistics.Add(playerStatistic);
 }
 
-File.WriteAllText("statistics.json", JsonSerializer.Serialize(statistics, StatisticsJsonContext.Default.Statistics));
+File.WriteAllText("data/statistics.json", JsonSerializer.Serialize(statistics, StatisticsJsonContext.Default.Statistics));
 
 class Statistics
 {

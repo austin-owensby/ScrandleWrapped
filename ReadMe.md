@@ -17,7 +17,7 @@ To run a script run `dotnet run <C# file>`
 This hits Slack's endpoint to scrape data and records it all in a `raw_messages.json`.
 I've manually replaced the names for deactivated accounts since there were only 5, this could be a future enhancement.
 
-To use this, copy the appsettings.json file and rename it to appsettings.Development.json and fill in the values. You can grab most of these by visiting Slack from your browser, open your browser's DevTools and inspect some of the Network calls made while navigating the desired channel.
+To use this, copy the `appsettings.json` file and rename it to `appsettings.Development.json` and fill in the values. You can grab most of these by visiting Slack from your browser, open your browser's DevTools and inspect some of the Network calls made while navigating the desired channel.
 
 ### Review Data
 
