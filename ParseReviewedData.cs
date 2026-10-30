@@ -76,6 +76,14 @@ foreach (ReviewedMessage message in reviewedMessages)
         }
     }
 
+    short answers = parsedMessage.Answers;
+    while (answers != 0)
+    {
+        int digit = answers % 2; // Extract last digit
+        parsedMessage.Score += digit;
+        answers /= 2; // Remove last digit
+    }
+
     parsedMessages.Add(parsedMessage);
 }
 
@@ -98,6 +106,7 @@ class ParsedMessage
     public string RawText { get; set; } = string.Empty;
     public DateTimeOffset Timestamp { get; set; }
     public short Answers { get; set; } = 0b0000000000;
+    public int Score { get; set; }
 }
 
 [JsonSerializable(typeof(List<ReviewedMessage>))]
