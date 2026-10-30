@@ -34,6 +34,29 @@ This outputs a `parsed_messages.json` file.
 
 ## TODO
 
+- Grab community statistics and matchups for statistics
 - Flesh out statistics
+  - Without community statistics
+    - Streak
+    - Perfect Streak
+    - Capsher average overall
+    - Scrandlebot average overall
+    - Days met/beat the average (Capsher, Scrandlebot)
+    - Days Capsher average beat Scrandlebot
+    - Blew it count (9/10, incorrect on last one)
+    - Number of team works
+    - Capsher average per day
+  - With community statistics
+    - Community average overall
+    - Hardest day this year
+    - Easiest day this year
+    - Days beat community average
+    - Days met/beat the average (Community)
+    - Days Capsher average beat the community average
+    - Best day (Highest score above community average)
+    - Worst day (Lowest score below community average)
+    - Best match up (Correct answer on difficult matchup)
+    - Worst match up (Incorrect answer on easy matchup)
+    - Community average per day
 - Build a GitHub site to display data and show personalized stats
 - Finalize results and update Scrandlebot

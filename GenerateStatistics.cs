@@ -20,13 +20,20 @@ void CalculatePlayerStats()
     {
         List<ParsedMessage> userMessages = parsedMessages.Where(m => m.User == user).ToList();
 
-        statistics.PlayerStatistics.Add(new PlayerStatistics()
+        PlayerStatistics playerStatistic = new()
         {
             DeletedUser = userMessages.First().DeletedUser,
             User = user,
             DaysPlayed = userMessages.Count,
             Average = (double)userMessages.Sum(u => u.Score) / userMessages.Count
-        });
+        };
+
+        foreach (ParsedMessage message in userMessages)
+        {
+            playerStatistic.ScoreFrequency[message.Score]++;
+        }
+
+        statistics.PlayerStatistics.Add(playerStatistic);
     }
 }
 
@@ -47,6 +54,20 @@ class PlayerStatistics
     public string User { get; set; } = string.Empty;
     public int DaysPlayed { get; set; }
     public double Average { get; set; }
+    public Dictionary<int, int> ScoreFrequency { get; set; } = new()
+    {
+        {0, 0},
+        {1, 0},
+        {2, 0},
+        {3, 0},
+        {4, 0},
+        {5, 0},
+        {6, 0},
+        {7, 0},
+        {8, 0},
+        {9, 0},
+        {10, 0}
+    };
 }
 
 class ParsedMessage

@@ -4,151 +4,476 @@
       "DeletedUser": false,
       "User": "Aaron Ingram",
       "DaysPlayed": 151,
-      "Average": 8.205298013245033
+      "Average": 8.205298013245033,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 1,
+        "4": 0,
+        "5": 5,
+        "6": 8,
+        "7": 23,
+        "8": 49,
+        "9": 40,
+        "10": 25
+      }
     },
     {
       "DeletedUser": false,
       "User": "Austin Owensby",
       "DaysPlayed": 134,
-      "Average": 8.08955223880597
+      "Average": 8.08955223880597,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "4": 1,
+        "5": 7,
+        "6": 10,
+        "7": 20,
+        "8": 33,
+        "9": 41,
+        "10": 21
+      }
     },
     {
       "DeletedUser": false,
       "User": "Ben Quigley",
       "DaysPlayed": 13,
-      "Average": 7.3076923076923075
+      "Average": 7.3076923076923075,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 1,
+        "5": 0,
+        "6": 2,
+        "7": 5,
+        "8": 2,
+        "9": 2,
+        "10": 1
+      }
     },
     {
       "DeletedUser": false,
       "User": "Carlos Grosso",
       "DaysPlayed": 201,
-      "Average": 7.970149253731344
+      "Average": 7.970149253731344,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 2,
+        "5": 12,
+        "6": 18,
+        "7": 34,
+        "8": 50,
+        "9": 62,
+        "10": 23
+      }
     },
     {
       "DeletedUser": false,
       "User": "Casey Gustaveson",
       "DaysPlayed": 160,
-      "Average": 7.9
+      "Average": 7.9,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 5,
+        "5": 11,
+        "6": 14,
+        "7": 21,
+        "8": 42,
+        "9": 48,
+        "10": 19
+      }
     },
     {
       "DeletedUser": true,
       "User": "Christian Vaquez",
       "DaysPlayed": 22,
-      "Average": 8.227272727272727
+      "Average": 8.227272727272727,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 1,
+        "5": 1,
+        "6": 2,
+        "7": 4,
+        "8": 1,
+        "9": 6,
+        "10": 7
+      }
     },
     {
       "DeletedUser": false,
       "User": "David Hutchins",
       "DaysPlayed": 201,
-      "Average": 8.09452736318408
+      "Average": 8.09452736318408,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 2,
+        "5": 9,
+        "6": 12,
+        "7": 36,
+        "8": 58,
+        "9": 54,
+        "10": 30
+      }
     },
     {
       "DeletedUser": false,
       "User": "Emmeline Blevins",
       "DaysPlayed": 179,
-      "Average": 7.731843575418995
+      "Average": 7.731843575418995,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 1,
+        "4": 6,
+        "5": 8,
+        "6": 24,
+        "7": 31,
+        "8": 43,
+        "9": 48,
+        "10": 18
+      }
     },
     {
       "DeletedUser": false,
       "User": "Ethan Collins",
       "DaysPlayed": 164,
-      "Average": 7.847560975609756
+      "Average": 7.847560975609756,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "4": 4,
+        "5": 6,
+        "6": 16,
+        "7": 30,
+        "8": 47,
+        "9": 43,
+        "10": 17
+      }
     },
     {
       "DeletedUser": false,
       "User": "Fletcher Comstock",
       "DaysPlayed": 112,
-      "Average": 7.428571428571429
+      "Average": 7.428571428571429,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 1,
+        "3": 0,
+        "4": 4,
+        "5": 7,
+        "6": 17,
+        "7": 23,
+        "8": 31,
+        "9": 22,
+        "10": 7
+      }
     },
     {
       "DeletedUser": true,
       "User": "Grant Bridges",
       "DaysPlayed": 8,
-      "Average": 7.625
+      "Average": 7.625,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 1,
+        "5": 0,
+        "6": 0,
+        "7": 2,
+        "8": 3,
+        "9": 1,
+        "10": 1
+      }
     },
     {
       "DeletedUser": true,
       "User": "Hadeed Khan",
       "DaysPlayed": 39,
-      "Average": 8.487179487179487
+      "Average": 8.487179487179487,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 1,
+        "6": 3,
+        "7": 3,
+        "8": 11,
+        "9": 11,
+        "10": 10
+      }
     },
     {
       "DeletedUser": false,
       "User": "Jeremy Vidaurri",
       "DaysPlayed": 207,
-      "Average": 7.879227053140097
+      "Average": 7.879227053140097,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 1,
+        "4": 4,
+        "5": 11,
+        "6": 17,
+        "7": 43,
+        "8": 56,
+        "9": 44,
+        "10": 31
+      }
     },
     {
       "DeletedUser": false,
       "User": "John Sikes",
       "DaysPlayed": 206,
-      "Average": 8.135922330097088
+      "Average": 8.135922330097088,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 1,
+        "4": 1,
+        "5": 5,
+        "6": 19,
+        "7": 34,
+        "8": 56,
+        "9": 56,
+        "10": 34
+      }
     },
     {
       "DeletedUser": false,
       "User": "John Voelker",
       "DaysPlayed": 3,
-      "Average": 8
+      "Average": 8,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 1,
+        "10": 1
+      }
     },
     {
       "DeletedUser": false,
       "User": "Kelsey Ward",
       "DaysPlayed": 103,
-      "Average": 7.728155339805825
+      "Average": 7.728155339805825,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 1,
+        "2": 1,
+        "3": 1,
+        "4": 1,
+        "5": 4,
+        "6": 8,
+        "7": 23,
+        "8": 32,
+        "9": 19,
+        "10": 13
+      }
     },
     {
       "DeletedUser": false,
       "User": "Kory Welch",
       "DaysPlayed": 74,
-      "Average": 8.054054054054054
+      "Average": 8.054054054054054,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 4,
+        "6": 8,
+        "7": 12,
+        "8": 20,
+        "9": 16,
+        "10": 14
+      }
     },
     {
       "DeletedUser": false,
       "User": "Matt Harrison",
       "DaysPlayed": 27,
-      "Average": 7.814814814814815
+      "Average": 7.814814814814815,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 1,
+        "6": 3,
+        "7": 5,
+        "8": 12,
+        "9": 3,
+        "10": 3
+      }
     },
     {
       "DeletedUser": false,
       "User": "Michelle Osterholm",
       "DaysPlayed": 145,
-      "Average": 8.013793103448275
+      "Average": 8.013793103448275,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 3,
+        "5": 6,
+        "6": 14,
+        "7": 23,
+        "8": 38,
+        "9": 39,
+        "10": 22
+      }
     },
     {
       "DeletedUser": false,
       "User": "Seraphim Kindt",
       "DaysPlayed": 144,
-      "Average": 7.694444444444445
+      "Average": 7.694444444444445,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 7,
+        "5": 4,
+        "6": 17,
+        "7": 31,
+        "8": 39,
+        "9": 31,
+        "10": 15
+      }
     },
     {
       "DeletedUser": true,
       "User": "Thomas Gray",
       "DaysPlayed": 68,
-      "Average": 7.544117647058823
+      "Average": 7.544117647058823,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 1,
+        "5": 5,
+        "6": 9,
+        "7": 20,
+        "8": 15,
+        "9": 10,
+        "10": 8
+      }
     },
     {
       "DeletedUser": false,
       "User": "Tripper Sterling Wright",
       "DaysPlayed": 100,
-      "Average": 7.93
+      "Average": 8.13,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 3,
+        "5": 8,
+        "6": 4,
+        "7": 14,
+        "8": 22,
+        "9": 27,
+        "10": 22
+      }
     },
     {
       "DeletedUser": true,
       "User": "Wade Moore",
       "DaysPlayed": 53,
-      "Average": 8
+      "Average": 8,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 2,
+        "5": 1,
+        "6": 4,
+        "7": 13,
+        "8": 10,
+        "9": 14,
+        "10": 9
+      }
     },
     {
       "DeletedUser": false,
       "User": "Wesley Bergeron",
       "DaysPlayed": 3,
-      "Average": 7.666666666666667
+      "Average": 7.666666666666667,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 2,
+        "8": 0,
+        "9": 1,
+        "10": 0
+      }
     },
     {
       "DeletedUser": false,
       "User": "Wu",
       "DaysPlayed": 15,
-      "Average": 7.666666666666667
+      "Average": 7.666666666666667,
+      "ScoreFrequency": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 1,
+        "4": 1,
+        "5": 1,
+        "6": 0,
+        "7": 3,
+        "8": 3,
+        "9": 2,
+        "10": 4
+      }
     }
   ]
 }

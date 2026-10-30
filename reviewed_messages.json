@@ -813,7 +813,7 @@
     "Text": ":large_red_square::large_green_square::large_red_square::large_green_square::large_red_square::large_red_square::large_green_square::large_red_square::large_red_square::large_red_square: 3/10",
     "Timestamp": "2026-10-13T09:17:38-05:00",
     "Note": "",
-    "Inverse": false
+    "Inverse": true
   },
   {
     "DeletedUser": false,
@@ -1541,7 +1541,7 @@
     "Text": ":large_red_square::large_red_square::large_red_square::large_red_square::large_red_square::large_red_square::large_red_square::large_red_square::large_red_square::large_green_square: 1/10",
     "Timestamp": "2026-09-29T10:16:23-05:00",
     "Note": "",
-    "Inverse": false
+    "Inverse": true
   },
   {
     "DeletedUser": false,
@@ -3933,7 +3933,7 @@
     "Text": ":large_red_square::large_red_square::large_red_square::large_red_square::large_red_square::large_red_square::large_red_square::large_red_square::large_green_square::large_red_square: 1/10 | 2026-08-19",
     "Timestamp": "2026-08-19T09:04:48-05:00",
     "Note": "",
-    "Inverse": false
+    "Inverse": true
   },
   {
     "DeletedUser": false,
