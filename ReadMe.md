@@ -32,26 +32,25 @@ This consistent format will allow us to calculate statistics on the days.
 
 This outputs a `parsed_messages.json` file.
 
+### Generate Statistics
+
+This takes in the `parsed_messages.json` file and generates various statistics and outputs them to `statistics.json`
+
 ## TODO
 
 - Grab community statistics and matchups for statistics
+- Grab Scrandlebot stats
 - Flesh out statistics
-  - Without community statistics
-    - Streak
-    - Perfect Streak
-    - Capsher average overall
+  - Without community statistics, but with Scrandlebot
     - Scrandlebot average overall
-    - Days met/beat the average (Capsher, Scrandlebot)
+    - Days beat the Scrandlebot
     - Days Capsher average beat Scrandlebot
-    - Blew it count (9/10, incorrect on last one)
-    - Number of team works
-    - Capsher average per day
   - With community statistics
     - Community average overall
     - Hardest day this year
     - Easiest day this year
     - Days beat community average
-    - Days met/beat the average (Community)
+    - Days beat the average (Community)
     - Days Capsher average beat the community average
     - Best day (Highest score above community average)
     - Worst day (Lowest score below community average)
@@ -59,4 +58,10 @@ This outputs a `parsed_messages.json` file.
     - Worst match up (Incorrect answer on easy matchup)
     - Community average per day
 - Build a GitHub site to display data and show personalized stats
-- Finalize results and update Scrandlebot
+  - Select yourself
+  - Show Capsher stats (Number of puzzles, days Capsher beat the community, Capsher best day, Capsher worst day)
+  - Show individual stats as a build up (Days played, average, best day, worst day, best matchup, worst matchup)
+  - Give out awards for special achievements, choose most impressive and try to keep unique
+  - Stats page (Capsher stats, individual stats, percent vs. total, export of raw data)
+  - Share button
+- Finalize results on 11/30 and update Scrandlebot to post a link.

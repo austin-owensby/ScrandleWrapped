@@ -8,38 +8,85 @@ List<ParsedMessage> parsedMessages = JsonSerializer.Deserialize(fileContents, Pa
 
 Statistics statistics = new();
 
-CalculatePlayerStats();
+var dates = parsedMessages.GroupBy(m => m.Timestamp.Date).ToList();
+statistics.CapsherAveragePerDay = dates.ToDictionary(g => g.Key, g => g.ToList().Average(m => m.Score));
 
-File.WriteAllText("statistics.json", JsonSerializer.Serialize(statistics, StatisticsJsonContext.Default.Statistics));
+List<string> users = parsedMessages.Select(m => m.User).Distinct().Order().ToList();
 
-void CalculatePlayerStats()
+statistics.CapsherAverage = parsedMessages.Average(m => m.Score);
+
+foreach (string user in users)
 {
-    List<string> users = parsedMessages.Select(m => m.User).Distinct().Order().ToList();
+    List<ParsedMessage> userMessages = parsedMessages.Where(m => m.User == user).ToList();
 
-    foreach (string user in users)
+    PlayerStatistics playerStatistic = new()
     {
-        List<ParsedMessage> userMessages = parsedMessages.Where(m => m.User == user).ToList();
+        DeletedUser = userMessages.First().DeletedUser,
+        User = user,
+        DaysPlayed = userMessages.Count,
+        Average = userMessages.Average(u => u.Score)
+    };
 
-        PlayerStatistics playerStatistic = new()
-        {
-            DeletedUser = userMessages.First().DeletedUser,
-            User = user,
-            DaysPlayed = userMessages.Count,
-            Average = (double)userMessages.Sum(u => u.Score) / userMessages.Count
-        };
+    int currentPerfectStreak = 0;
+    DateTime? nextDay = null;
+    int currentStreak = 1;
 
-        foreach (ParsedMessage message in userMessages)
+    foreach (ParsedMessage message in userMessages)
+    {
+        if (message.Timestamp.Date.AddDays(1) == nextDay || message.Timestamp.Date.DayOfWeek == DayOfWeek.Friday && message.Timestamp.Date.AddDays(3) == nextDay)
         {
-            playerStatistic.ScoreFrequency[message.Score]++;
+            currentStreak++;
+
+            if (currentStreak > playerStatistic.BestStreak)
+            {
+                playerStatistic.BestStreak = currentStreak;
+            }
+        }
+        else
+        {
+            currentStreak = 1;
+        }
+        nextDay = message.Timestamp.Date;
+
+        playerStatistic.ScoreFrequency[message.Score]++;
+
+        if (statistics.CapsherAveragePerDay[message.Timestamp.Date] < message.Score)
+        {
+            playerStatistic.BeatCapsherAverage++;
         }
 
-        statistics.PlayerStatistics.Add(playerStatistic);
+        if (message.Score == 10)
+        {
+            currentPerfectStreak++;
+
+            if (currentPerfectStreak > playerStatistic.BestPerfectStreak)
+            {
+                playerStatistic.BestPerfectStreak = currentPerfectStreak;
+            }
+        }
+        else
+        {
+            currentPerfectStreak = 0;
+        }
+
+        if (message.Answers == 0b1111111110)
+        {
+            playerStatistic.BlewItCount++;
+        }
+
+        playerStatistic.TeamworkCount += parsedMessages.Count(m => m.User != message.User && m.Timestamp.Date == message.Timestamp.Date && m.Answers == message.Answers);
     }
+
+    statistics.PlayerStatistics.Add(playerStatistic);
 }
+
+File.WriteAllText("statistics.json", JsonSerializer.Serialize(statistics, StatisticsJsonContext.Default.Statistics));
 
 class Statistics
 {
     public List<PlayerStatistics> PlayerStatistics { get; set; } = [];
+    public double CapsherAverage { get; set; }
+    public Dictionary<DateTime, double> CapsherAveragePerDay { get; set; } = [];
 }
 
 [JsonSourceGenerationOptions(WriteIndented = true)]
@@ -54,6 +101,11 @@ class PlayerStatistics
     public string User { get; set; } = string.Empty;
     public int DaysPlayed { get; set; }
     public double Average { get; set; }
+    public int BestStreak { get; set; } = 1;
+    public int BestPerfectStreak { get; set; }
+    public int BeatCapsherAverage { get; set; }
+    public int BlewItCount { get; set; }
+    public int TeamworkCount { get; set; }
     public Dictionary<int, int> ScoreFrequency { get; set; } = new()
     {
         {0, 0},
