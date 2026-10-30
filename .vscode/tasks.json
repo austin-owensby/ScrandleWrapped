@@ -38,6 +38,25 @@
         "kind": "build",
         "isDefault": true
       }
+    },
+    {
+      "label": "build GenerateStatistics",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}\\GenerateStatistics.cs",
+        "--configuration",
+        "Debug",
+        "--no-restore",
+        "--output",
+        "${workspaceFolder}\\bin\\Debug\\generateStatistics"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     }
   ]
 }

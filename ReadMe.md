@@ -34,5 +34,6 @@ This outputs a `parsed_messages.json` file.
 
 ## TODO
 
-- Analyze data and start generating statistics
+- Flesh out statistics
 - Build a GitHub site to display data and show personalized stats
+- Finalize results and update Scrandlebot

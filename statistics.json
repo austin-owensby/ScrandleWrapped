@@ -1,0 +1,154 @@
+{
+  "PlayerStatistics": [
+    {
+      "DeletedUser": false,
+      "User": "Aaron Ingram",
+      "DaysPlayed": 151,
+      "Average": 8.205298013245033
+    },
+    {
+      "DeletedUser": false,
+      "User": "Austin Owensby",
+      "DaysPlayed": 134,
+      "Average": 8.08955223880597
+    },
+    {
+      "DeletedUser": false,
+      "User": "Ben Quigley",
+      "DaysPlayed": 13,
+      "Average": 7.3076923076923075
+    },
+    {
+      "DeletedUser": false,
+      "User": "Carlos Grosso",
+      "DaysPlayed": 201,
+      "Average": 7.970149253731344
+    },
+    {
+      "DeletedUser": false,
+      "User": "Casey Gustaveson",
+      "DaysPlayed": 160,
+      "Average": 7.9
+    },
+    {
+      "DeletedUser": true,
+      "User": "Christian Vaquez",
+      "DaysPlayed": 22,
+      "Average": 8.227272727272727
+    },
+    {
+      "DeletedUser": false,
+      "User": "David Hutchins",
+      "DaysPlayed": 201,
+      "Average": 8.09452736318408
+    },
+    {
+      "DeletedUser": false,
+      "User": "Emmeline Blevins",
+      "DaysPlayed": 179,
+      "Average": 7.731843575418995
+    },
+    {
+      "DeletedUser": false,
+      "User": "Ethan Collins",
+      "DaysPlayed": 164,
+      "Average": 7.847560975609756
+    },
+    {
+      "DeletedUser": false,
+      "User": "Fletcher Comstock",
+      "DaysPlayed": 112,
+      "Average": 7.428571428571429
+    },
+    {
+      "DeletedUser": true,
+      "User": "Grant Bridges",
+      "DaysPlayed": 8,
+      "Average": 7.625
+    },
+    {
+      "DeletedUser": true,
+      "User": "Hadeed Khan",
+      "DaysPlayed": 39,
+      "Average": 8.487179487179487
+    },
+    {
+      "DeletedUser": false,
+      "User": "Jeremy Vidaurri",
+      "DaysPlayed": 207,
+      "Average": 7.879227053140097
+    },
+    {
+      "DeletedUser": false,
+      "User": "John Sikes",
+      "DaysPlayed": 206,
+      "Average": 8.135922330097088
+    },
+    {
+      "DeletedUser": false,
+      "User": "John Voelker",
+      "DaysPlayed": 3,
+      "Average": 8
+    },
+    {
+      "DeletedUser": false,
+      "User": "Kelsey Ward",
+      "DaysPlayed": 103,
+      "Average": 7.728155339805825
+    },
+    {
+      "DeletedUser": false,
+      "User": "Kory Welch",
+      "DaysPlayed": 74,
+      "Average": 8.054054054054054
+    },
+    {
+      "DeletedUser": false,
+      "User": "Matt Harrison",
+      "DaysPlayed": 27,
+      "Average": 7.814814814814815
+    },
+    {
+      "DeletedUser": false,
+      "User": "Michelle Osterholm",
+      "DaysPlayed": 145,
+      "Average": 8.013793103448275
+    },
+    {
+      "DeletedUser": false,
+      "User": "Seraphim Kindt",
+      "DaysPlayed": 144,
+      "Average": 7.694444444444445
+    },
+    {
+      "DeletedUser": true,
+      "User": "Thomas Gray",
+      "DaysPlayed": 68,
+      "Average": 7.544117647058823
+    },
+    {
+      "DeletedUser": false,
+      "User": "Tripper Sterling Wright",
+      "DaysPlayed": 100,
+      "Average": 7.93
+    },
+    {
+      "DeletedUser": true,
+      "User": "Wade Moore",
+      "DaysPlayed": 53,
+      "Average": 8
+    },
+    {
+      "DeletedUser": false,
+      "User": "Wesley Bergeron",
+      "DaysPlayed": 3,
+      "Average": 7.666666666666667
+    },
+    {
+      "DeletedUser": false,
+      "User": "Wu",
+      "DaysPlayed": 15,
+      "Average": 7.666666666666667
+    }
+  ]
+}

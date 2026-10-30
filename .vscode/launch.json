@@ -24,6 +24,18 @@
       "logging": {
         "moduleLoad": false
       }
+    },
+    {
+      "name": "Debug GenerateStatistics",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}\\bin\\Debug\\generateStatistics\\GenerateStatistics.exe",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "preLaunchTask": "build GenerateStatistics",
+      "logging": {
+        "moduleLoad": false
+      }
     }
   ]
 }
