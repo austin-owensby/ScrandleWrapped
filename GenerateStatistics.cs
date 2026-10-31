@@ -10,6 +10,8 @@ Statistics statistics = new();
 
 var dates = parsedMessages.GroupBy(m => m.Timestamp.Date).ToList();
 statistics.CapsherAveragePerDay = dates.ToDictionary(g => g.Key, g => g.ToList().Average(m => m.Score));
+statistics.HardestDay = statistics.CapsherAveragePerDay.MinBy(kp => kp.Value).Key;
+statistics.EasiestDay = statistics.CapsherAveragePerDay.MaxBy(kp => kp.Value).Key;
 
 List<string> users = parsedMessages.Select(m => m.User).Distinct().Order().ToList();
 
@@ -87,6 +89,8 @@ class Statistics
     public List<PlayerStatistics> PlayerStatistics { get; set; } = [];
     public double CapsherAverage { get; set; }
     public Dictionary<DateTime, double> CapsherAveragePerDay { get; set; } = [];
+    public DateTime HardestDay { get; set; } = new();
+    public DateTime EasiestDay { get; set; } = new();
 }
 
 [JsonSourceGenerationOptions(WriteIndented = true)]

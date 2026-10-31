@@ -47,8 +47,6 @@ This takes in the `parsed_messages.json` file and generates various statistics a
     - Days Capsher average beat Scrandlebot
   - With community statistics
     - Community average overall
-    - Hardest day this year
-    - Easiest day this year
     - Days beat community average
     - Days beat the average (Community)
     - Days Capsher average beat the community average
