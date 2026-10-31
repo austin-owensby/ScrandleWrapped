@@ -3,6 +3,7 @@
 #:include Models.cs
 
 using System.Globalization;
+using System.Numerics;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Models;
@@ -17,7 +18,7 @@ DateTimeOffset? latest = null;
 if (File.Exists("data/parsed_messages.json"))
 {
     fileContents = File.ReadAllText("data/parsed_messages.json");
-    parsedMessages = JsonSerializer.Deserialize(fileContents, SlackJsonContext.Default.ListParsedMessage) ?? [];
+    parsedMessages = JsonSerializer.Deserialize(fileContents, ScrandleWrappedJsonContext.Default.ListParsedMessage) ?? [];
 
     latest = parsedMessages.First().Timestamp;
 }
@@ -50,7 +51,11 @@ foreach (ReviewedMessage message in reviewedMessages)
     if (message.Note != string.Empty)
     {
         // Read Input
-        Console.WriteLine($"Message has notes '{(parsedAnswer == null ? message.Text : parsedAnswer!.Value.ToString("B10"))}' Inverted: {message.Inverse}, Note: {message.Note}");
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.WriteLine($"Message has notes '{(parsedAnswer == null ? message.Text : parsedAnswer!.Value.ToString("B10"))}' Inverted: {message.Inverse}, Note: {message.Note}.");
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("Please input the answers in binary.");
+        Console.ResetColor();
         string? input = Console.ReadLine();
         parsedMessage.Answers = short.Parse(input!, NumberStyles.BinaryNumber);
 
@@ -63,7 +68,11 @@ foreach (ReviewedMessage message in reviewedMessages)
     {
         if (parsedAnswer == null)
         {
-            Console.WriteLine($"Could not parse match for '{message.Text}' Inverted: {message.Inverse}");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Could not parse match for '{message.Text}' Inverted: {message.Inverse}.");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Please input the answers in binary.");
+            Console.ResetColor();
             string? input = Console.ReadLine();
             parsedMessage.Answers = short.Parse(input!, NumberStyles.BinaryNumber);
         }
@@ -78,18 +87,12 @@ foreach (ReviewedMessage message in reviewedMessages)
         }
     }
 
-    short answers = parsedMessage.Answers;
-    while (answers != 0)
-    {
-        int digit = answers % 2; // Extract last digit
-        parsedMessage.Score += digit;
-        answers /= 2; // Remove last digit
-    }
+    parsedMessage.Score = BitOperations.PopCount((uint)parsedMessage.Answers);
 
     parsedMessages.Add(parsedMessage);
 }
 
-File.WriteAllText("data/parsed_messages.json", JsonSerializer.Serialize([.. parsedMessages.OrderByDescending(m => m.Timestamp)], SlackJsonContext.Default.ListParsedMessage));
+File.WriteAllText("data/parsed_messages.json", JsonSerializer.Serialize([.. parsedMessages.OrderByDescending(m => m.Timestamp)], ScrandleWrappedJsonContext.Default.ListParsedMessage));
 
 
 partial class Program
