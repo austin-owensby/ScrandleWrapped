@@ -32,7 +32,7 @@ DateTimeOffset? latest = null;
 if (File.Exists("data/raw_messages.json"))
 {
     string fileContents = File.ReadAllText("data/raw_messages.json");
-    messages = JsonSerializer.Deserialize(fileContents, SlackJsonContext.Default.ListRawMessage) ?? [];
+    messages = JsonSerializer.Deserialize(fileContents, ScrandleWrappedJsonContext.Default.ListRawMessage) ?? [];
 
     latest = messages.First().Timestamp;
 }
@@ -81,34 +81,28 @@ do
 }
 while (keepParsing);
 
-File.WriteAllText("data/raw_messages.json", JsonSerializer.Serialize([.. messages.OrderByDescending(m => m.Timestamp)], SlackJsonContext.Default.ListRawMessage));
+File.WriteAllText("data/raw_messages.json", JsonSerializer.Serialize([.. messages.OrderByDescending(m => m.Timestamp)], ScrandleWrappedJsonContext.Default.ListRawMessage));
 
 // Get Scrandle data
 Console.ForegroundColor = ConsoleColor.Green;
-Console.WriteLine("Fetching community data");
+Console.WriteLine("Fetching community data, this takes a bit");
 Console.ResetColor();
 ScrandleGateway scrandleGateway = new();
 
 DateOnly firstDayOfYear = new(DateTime.Today.Year, 1, 1);
-List<(DateOnly, Task<CommunityDataDay> task)> httpTasks = [.. Enumerable
+List<(DateOnly, Task<CommunityDayData> communityTask, Task<MatchupDayData> matchupTask)> httpTasks = [.. Enumerable
     .Range(0, DateTime.Today.DayOfYear - 1)
     .Select(firstDayOfYear.AddDays)
-    .Select(d => (date: d, task: scrandleGateway.GetDayData(d)))];
-await Task.WhenAll(httpTasks.Select(t => t.task));
+    .Select(d => (d, scrandleGateway.GetDayCommunityData(d), scrandleGateway.GetDayMatchupData(d)))];
+await Task.WhenAll(httpTasks.SelectMany<(DateOnly, Task<CommunityDayData> communityTask, Task<MatchupDayData> matchupTask), Task>(t => [t.communityTask, t.matchupTask]));
 
 Console.ForegroundColor = ConsoleColor.Green;
 Console.WriteLine("Saving community data");
 Console.ResetColor();
 
-List<ParsedCommunityDay> parsedCommunityDays = [];
-foreach (var (date, task) in httpTasks)
-{
-    parsedCommunityDays.Add(new ParsedCommunityDay
-    {
-        Avg = task.Result.Avg,
-        Day = date
-    });
-}
+List<CommunityDayData> communityDayDatas = [..httpTasks.Select(t => t.communityTask.Result)];
+List<MatchupDayData> matchupDayDatas = [..httpTasks.Select(t => t.matchupTask.Result)];
 
+File.WriteAllText("data/community_data.json", JsonSerializer.Serialize([.. communityDayDatas.OrderByDescending(m => m.Day)], ScrandleJsonContext.Default.ListCommunityDayData));
 
-File.WriteAllText("data/community_data.json", JsonSerializer.Serialize([.. parsedCommunityDays.OrderByDescending(m => m.Day)], ScrandleJsonContext.Default.ListParsedCommunityDay));
+File.WriteAllText("data/matchup_data.json", JsonSerializer.Serialize([.. matchupDayDatas.OrderByDescending(m => m.Day)], ScrandleJsonContext.Default.ListMatchupDayData));

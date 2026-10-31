@@ -2,6 +2,7 @@
 
 #:include Models.cs
 
+using System.Collections;
 using System.Collections.Frozen;
 using System.Text.Json;
 using Models;
@@ -12,8 +13,14 @@ var capsherDictByUser = parsedMessages.GroupBy(mes => mes.User).ToFrozenDictiona
 var capsherDictByDay = parsedMessages.GroupBy(mes => mes.Timestamp.Date).ToFrozenDictionary(g => g.Key);
 
 string communityFileContents = File.ReadAllText("data/community_data.json");
-List<ParsedCommunityDay> parsedCommunityData = JsonSerializer.Deserialize(communityFileContents, ScrandleJsonContext.Default.ListParsedCommunityDay) ?? [];
+List<CommunityDayData> parsedCommunityData = JsonSerializer.Deserialize(communityFileContents, ScrandleJsonContext.Default.ListCommunityDayData) ?? [];
 var communityDataDict = parsedCommunityData.ToFrozenDictionary(ks => ks.Day);
+
+string matchupFileContents = File.ReadAllText("data/matchup_data.json");
+List<MatchupDayData> parsedMatchupData = JsonSerializer.Deserialize(matchupFileContents, ScrandleJsonContext.Default.ListMatchupDayData) ?? [];
+var matchupDataDict = parsedMatchupData
+    .Select(d => (d.Day, Difficulties: d.Data.Select(pair => (100 - Math.Abs(pair[0].Rating - pair[1].Rating)) / 100).ToArray()))
+    .ToFrozenDictionary(ks => ks.Day);
 
 Statistics statistics = new();
 
@@ -37,6 +44,8 @@ foreach (var (user, userMessages) in capsherDictByUser.OrderBy(kp => kp.Key))
         DaysPlayed = userMessages.Count(),
         Average = userMessages.Average(u => u.Score)
     };
+    playerStatistic.BestMatchup.Difficulty = 0;
+    playerStatistic.WorstMatchup.Difficulty = 1;
 
     int currentPerfectStreak = 0;
     DateTime? nextDay = null;
@@ -107,6 +116,32 @@ foreach (var (user, userMessages) in capsherDictByUser.OrderBy(kp => kp.Key))
         {
             currentWorstDiff = diffToCommunityAvg;
             playerStatistic.WorstDay = messageDay;
+        }
+
+        // Bit arrays are little endian
+        var answerInBits = new BitArray([message.Answers]);
+        foreach (int answerIndex in Enumerable.Range(0, 10))
+        {
+            var bitArrayIndex = 9 - answerIndex;
+            var difficulty = matchupDataDict[messageDay].Difficulties[answerIndex];
+            if (answerInBits[answerIndex] && difficulty > playerStatistic.BestMatchup.Difficulty)
+            {
+                playerStatistic.BestMatchup = new MatchupStatistic
+                {
+                    Day = messageDay,
+                    Difficulty = difficulty,
+                    ItemIndex = answerIndex
+                };
+            }
+            else if (!answerInBits[answerIndex] && difficulty < playerStatistic.WorstMatchup.Difficulty)
+            {
+                playerStatistic.WorstMatchup = new MatchupStatistic
+                {
+                    Day = messageDay,
+                    Difficulty = difficulty,
+                    ItemIndex = answerIndex
+                };
+            }
         }
     }
 
