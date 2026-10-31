@@ -1,9 +1,11 @@
 #!/usr/bin/env dotnet
 
+#:include Models.cs
+
 using System.Globalization;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Models;
 
 string fileContents = File.ReadAllText("data/reviewed_messages.json");
 List<ReviewedMessage> reviewedMessages = JsonSerializer.Deserialize(fileContents, ReviewedJsonContext.Default.ListReviewedMessage) ?? [];
@@ -89,36 +91,6 @@ foreach (ReviewedMessage message in reviewedMessages)
 
 File.WriteAllText("data/parsed_messages.json", JsonSerializer.Serialize(parsedMessages.OrderByDescending(m => m.Timestamp).ToList(), ParsedJsonContext.Default.ListParsedMessage));
 
-class ReviewedMessage
-{
-    public bool DeletedUser { get; set; }
-    public string User { get; set; } = string.Empty;
-    public string Text { get; set; } = string.Empty;
-    public DateTimeOffset Timestamp { get; set; }
-    public string Note { get; set; } = string.Empty;
-    public bool Inverse { get; set; }
-}
-
-class ParsedMessage
-{
-    public bool DeletedUser { get; set; }
-    public string User { get; set; } = string.Empty;
-    public string RawText { get; set; } = string.Empty;
-    public DateTimeOffset Timestamp { get; set; }
-    public short Answers { get; set; } = 0b0000000000;
-    public int Score { get; set; }
-}
-
-[JsonSerializable(typeof(List<ReviewedMessage>))]
-internal partial class ReviewedJsonContext : JsonSerializerContext
-{
-}
-
-[JsonSourceGenerationOptions(WriteIndented = true)]
-[JsonSerializable(typeof(List<ParsedMessage>))]
-internal partial class ParsedJsonContext : JsonSerializerContext
-{
-}
 
 partial class Program
 {

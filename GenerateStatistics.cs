@@ -1,21 +1,29 @@
 #!/usr/bin/env dotnet
 
-using System.Text.Json;
-using System.Text.Json.Serialization;
+#:include Models.cs
 
-string fileContents = File.ReadAllText("data/parsed_messages.json");
-List<ParsedMessage> parsedMessages = JsonSerializer.Deserialize(fileContents, ParsedJsonContext.Default.ListParsedMessage) ?? [];
+using System.Text.Json;
+using Models;
+
+string slackFileContents = File.ReadAllText("data/parsed_messages.json");
+List<ParsedMessage> parsedMessages = JsonSerializer.Deserialize(slackFileContents, ParsedJsonContext.Default.ListParsedMessage) ?? [];
+
+string communityFileContents = File.ReadAllText("data/community_data.json");
+List<ParsedCommunityDay> parsedCommunityData = JsonSerializer.Deserialize(communityFileContents, OutputJsonContext.Default.ListParsedCommunityDay) ?? [];
 
 Statistics statistics = new();
 
 var dates = parsedMessages.GroupBy(m => m.Timestamp.Date).ToList();
+statistics.CapsherAverage = parsedMessages.Average(m => m.Score);
+statistics.CommunityAverage = parsedCommunityData.Average(d => d.Avg);
 statistics.CapsherAveragePerDay = dates.ToDictionary(g => g.Key, g => g.ToList().Average(m => m.Score));
-statistics.HardestDay = statistics.CapsherAveragePerDay.MinBy(kp => kp.Value).Key;
-statistics.EasiestDay = statistics.CapsherAveragePerDay.MaxBy(kp => kp.Value).Key;
+statistics.CapsherHardestDay = DateOnly.FromDateTime(statistics.CapsherAveragePerDay.MinBy(kp => kp.Value).Key);
+statistics.CapsherEasiestDay = DateOnly.FromDateTime(statistics.CapsherAveragePerDay.MaxBy(kp => kp.Value).Key);
+statistics.CommunityHardestDay = parsedCommunityData.MinBy(kp => kp.Avg)!.Day;
+statistics.CommunityEasiestDay = parsedCommunityData.MaxBy(kp => kp.Avg)!.Day;
 
 List<string> users = parsedMessages.Select(m => m.User).Distinct().Order().ToList();
 
-statistics.CapsherAverage = parsedMessages.Average(m => m.Score);
 
 foreach (string user in users)
 {
@@ -83,60 +91,3 @@ foreach (string user in users)
 }
 
 File.WriteAllText("data/statistics.json", JsonSerializer.Serialize(statistics, StatisticsJsonContext.Default.Statistics));
-
-class Statistics
-{
-    public List<PlayerStatistics> PlayerStatistics { get; set; } = [];
-    public double CapsherAverage { get; set; }
-    public Dictionary<DateTime, double> CapsherAveragePerDay { get; set; } = [];
-    public DateTime HardestDay { get; set; } = new();
-    public DateTime EasiestDay { get; set; } = new();
-}
-
-[JsonSourceGenerationOptions(WriteIndented = true)]
-[JsonSerializable(typeof(Statistics))]
-internal partial class StatisticsJsonContext : JsonSerializerContext
-{
-}
-
-class PlayerStatistics
-{
-    public bool DeletedUser { get; set; }
-    public string User { get; set; } = string.Empty;
-    public int DaysPlayed { get; set; }
-    public double Average { get; set; }
-    public int BestStreak { get; set; } = 1;
-    public int BestPerfectStreak { get; set; }
-    public int BeatCapsherAverage { get; set; }
-    public int BlewItCount { get; set; }
-    public int TeamworkCount { get; set; }
-    public Dictionary<int, int> ScoreFrequency { get; set; } = new()
-    {
-        {0, 0},
-        {1, 0},
-        {2, 0},
-        {3, 0},
-        {4, 0},
-        {5, 0},
-        {6, 0},
-        {7, 0},
-        {8, 0},
-        {9, 0},
-        {10, 0}
-    };
-}
-
-class ParsedMessage
-{
-    public bool DeletedUser { get; set; }
-    public string User { get; set; } = string.Empty;
-    public string RawText { get; set; } = string.Empty;
-    public DateTimeOffset Timestamp { get; set; }
-    public short Answers { get; set; } = 0b0000000000;
-    public int Score { get; set; }
-}
-
-[JsonSerializable(typeof(List<ParsedMessage>))]
-internal partial class ParsedJsonContext : JsonSerializerContext
-{
-}
