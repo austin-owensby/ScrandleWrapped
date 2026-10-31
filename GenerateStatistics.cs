@@ -2,6 +2,7 @@
 
 #:include Models.cs
 
+using System.Collections.Frozen;
 using System.Text.Json;
 using Models;
 
@@ -10,13 +11,17 @@ List<ParsedMessage> parsedMessages = JsonSerializer.Deserialize(slackFileContent
 
 string communityFileContents = File.ReadAllText("data/community_data.json");
 List<ParsedCommunityDay> parsedCommunityData = JsonSerializer.Deserialize(communityFileContents, OutputJsonContext.Default.ListParsedCommunityDay) ?? [];
+var communityDataDict = parsedCommunityData.ToFrozenDictionary(ks => ks.Day);
 
 Statistics statistics = new();
 
-var dates = parsedMessages.GroupBy(m => m.Timestamp.Date).ToList();
+var capsherDates = parsedMessages.GroupBy(m => m.Timestamp.Date).ToList();
 statistics.CapsherAverage = parsedMessages.Average(m => m.Score);
 statistics.CommunityAverage = parsedCommunityData.Average(d => d.Avg);
-statistics.CapsherAveragePerDay = dates.ToDictionary(g => g.Key, g => g.ToList().Average(m => m.Score));
+statistics.CapsherAveragePerDay = capsherDates.ToDictionary(g => g.Key, g => g.ToList().Average(m => m.Score));
+statistics.CommunityAveragePerDay = communityDataDict.ToDictionary(kp => kp.Key, kp => kp.Value.Avg);
+statistics.DaysAboveCommunityAverage = statistics.CapsherAveragePerDay.Count(cday => cday.Value > statistics.CommunityAverage);
+statistics.DaysCapsherBeatCommunity = statistics.CapsherAveragePerDay.Count(cday => cday.Value > communityDataDict[DateOnly.FromDateTime(cday.Key)].Avg);
 statistics.CapsherHardestDay = DateOnly.FromDateTime(statistics.CapsherAveragePerDay.MinBy(kp => kp.Value).Key);
 statistics.CapsherEasiestDay = DateOnly.FromDateTime(statistics.CapsherAveragePerDay.MaxBy(kp => kp.Value).Key);
 statistics.CommunityHardestDay = parsedCommunityData.MinBy(kp => kp.Avg)!.Day;
@@ -40,9 +45,13 @@ foreach (string user in users)
     int currentPerfectStreak = 0;
     DateTime? nextDay = null;
     int currentStreak = 1;
+    double currentBestDiff = -10;
+    double currentWorstDiff = 10;
 
     foreach (ParsedMessage message in userMessages)
     {
+        var messageDay = DateOnly.FromDateTime(message.Timestamp.Date)
+
         if (message.Timestamp.Date.AddDays(1) == nextDay || message.Timestamp.Date.DayOfWeek == DayOfWeek.Friday && message.Timestamp.Date.AddDays(3) == nextDay)
         {
             currentStreak++;
@@ -65,6 +74,16 @@ foreach (string user in users)
             playerStatistic.BeatCapsherAverage++;
         }
 
+        if (message.Score > statistics.CommunityAverage)
+        {
+            playerStatistic.BeatCommunityAverage++;
+        }
+
+        if (message.Score > communityDataDict[messageDay].Avg)
+        {
+            playerStatistic.BeatCommunity++;
+        }
+
         if (message.Score == 10)
         {
             currentPerfectStreak++;
@@ -85,6 +104,19 @@ foreach (string user in users)
         }
 
         playerStatistic.TeamworkCount += parsedMessages.Count(m => m.User != message.User && m.Timestamp.Date == message.Timestamp.Date && m.Answers == message.Answers);
+
+        var dayDiff = communityDataDict[messageDay].Avg - message.Score;
+
+        if (dayDiff > currentBestDiff)
+        {
+            currentBestDiff = dayDiff;
+            playerStatistic.BestDay = messageDay;
+        }
+        if (dayDiff < currentWorstDiff)
+        {
+            currentWorstDiff = dayDiff;
+            playerStatistic.WorstDay = messageDay;
+        }
     }
 
     statistics.PlayerStatistics.Add(playerStatistic);

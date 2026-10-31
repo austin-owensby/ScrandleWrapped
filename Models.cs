@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace Models;
@@ -8,6 +9,9 @@ class Statistics
     public double CapsherAverage { get; set; }
     public double CommunityAverage { get; set; } = new();
     public Dictionary<DateTime, double> CapsherAveragePerDay { get; set; } = [];
+    public Dictionary<DateOnly, double> CommunityAveragePerDay { get; set; } = [];
+    public int DaysCapsherBeatCommunity { get; set; }
+    public int DaysAboveCommunityAverage { get; set; }
     public DateOnly CapsherHardestDay { get; set; } = new();
     public DateOnly CapsherEasiestDay { get; set; } = new();
     public DateOnly CommunityHardestDay { get; set; } = new();
@@ -29,9 +33,13 @@ class PlayerStatistics
     public double Average { get; set; }
     public int BestStreak { get; set; } = 1;
     public int BestPerfectStreak { get; set; }
-    public int BeatCapsherAverage { get; set; }
+    public int BeatCapsherAverage { get; set; } = 0;
+    public int BeatCommunityAverage { get; set; } = 0;
+    public int BeatCommunity { get; set; } = 0;
     public int BlewItCount { get; set; }
     public int TeamworkCount { get; set; }
+    public DateOnly BestDay { get; set; } = DateOnly.MinValue;
+    public DateOnly WorstDay { get; set; } = DateOnly.MinValue;
     public Dictionary<int, int> ScoreFrequency { get; set; } = new()
     {
         {0, 0},
