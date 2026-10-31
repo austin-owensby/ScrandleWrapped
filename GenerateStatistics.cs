@@ -7,10 +7,12 @@ using System.Text.Json;
 using Models;
 
 string slackFileContents = File.ReadAllText("data/parsed_messages.json");
-List<ParsedMessage> parsedMessages = JsonSerializer.Deserialize(slackFileContents, ParsedJsonContext.Default.ListParsedMessage) ?? [];
+List<ParsedMessage> parsedMessages = JsonSerializer.Deserialize(slackFileContents, SlackJsonContext.Default.ListParsedMessage) ?? [];
+var capsherDictByUser = parsedMessages.GroupBy(mes => mes.User).ToFrozenDictionary(g => g.Key);
+var capsherDictByDay = parsedMessages.GroupBy(mes => mes.Timestamp.Date).ToFrozenDictionary(g => g.Key);
 
 string communityFileContents = File.ReadAllText("data/community_data.json");
-List<ParsedCommunityDay> parsedCommunityData = JsonSerializer.Deserialize(communityFileContents, OutputJsonContext.Default.ListParsedCommunityDay) ?? [];
+List<ParsedCommunityDay> parsedCommunityData = JsonSerializer.Deserialize(communityFileContents, ScrandleJsonContext.Default.ListParsedCommunityDay) ?? [];
 var communityDataDict = parsedCommunityData.ToFrozenDictionary(ks => ks.Day);
 
 Statistics statistics = new();
@@ -27,18 +29,15 @@ statistics.CapsherEasiestDay = DateOnly.FromDateTime(statistics.CapsherAveragePe
 statistics.CommunityHardestDay = parsedCommunityData.MinBy(kp => kp.Avg)!.Day;
 statistics.CommunityEasiestDay = parsedCommunityData.MaxBy(kp => kp.Avg)!.Day;
 
-List<string> users = parsedMessages.Select(m => m.User).Distinct().Order().ToList();
-
-
-foreach (string user in users)
+foreach (string user in capsherDictByUser.Select(m => m.Key).Order())
 {
-    List<ParsedMessage> userMessages = parsedMessages.Where(m => m.User == user).ToList();
+    var userMessages = capsherDictByUser[user];
 
     PlayerStatistics playerStatistic = new()
     {
         DeletedUser = userMessages.First().DeletedUser,
         User = user,
-        DaysPlayed = userMessages.Count,
+        DaysPlayed = userMessages.Count(),
         Average = userMessages.Average(u => u.Score)
     };
 
@@ -50,7 +49,7 @@ foreach (string user in users)
 
     foreach (ParsedMessage message in userMessages)
     {
-        var messageDay = DateOnly.FromDateTime(message.Timestamp.Date)
+        var messageDay = DateOnly.FromDateTime(message.Timestamp.Date);
 
         if (message.Timestamp.Date.AddDays(1) == nextDay || message.Timestamp.Date.DayOfWeek == DayOfWeek.Friday && message.Timestamp.Date.AddDays(3) == nextDay)
         {
@@ -103,7 +102,7 @@ foreach (string user in users)
             playerStatistic.BlewItCount++;
         }
 
-        playerStatistic.TeamworkCount += parsedMessages.Count(m => m.User != message.User && m.Timestamp.Date == message.Timestamp.Date && m.Answers == message.Answers);
+        playerStatistic.TeamworkCount += capsherDictByDay[message.Timestamp.Date].Count(m => m.User != message.User && m.Answers == message.Answers);
 
         var dayDiff = communityDataDict[messageDay].Avg - message.Score;
 
@@ -122,4 +121,4 @@ foreach (string user in users)
     statistics.PlayerStatistics.Add(playerStatistic);
 }
 
-File.WriteAllText("data/statistics.json", JsonSerializer.Serialize(statistics, StatisticsJsonContext.Default.Statistics));
+File.WriteAllText("data/statistics.json", JsonSerializer.Serialize(statistics, ScrandleWrappedJsonContext.Default.Statistics));

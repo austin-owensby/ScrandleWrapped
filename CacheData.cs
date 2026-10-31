@@ -32,7 +32,7 @@ DateTimeOffset? latest = null;
 if (File.Exists("data/raw_messages.json"))
 {
     string fileContents = File.ReadAllText("data/raw_messages.json");
-    messages = JsonSerializer.Deserialize(fileContents, OutputJsonContext.Default.ListParsedMessage) ?? [];
+    messages = JsonSerializer.Deserialize(fileContents, SlackJsonContext.Default.ListParsedMessage) ?? [];
 
     latest = messages.First().Timestamp;
 }
@@ -81,7 +81,7 @@ do
 }
 while (keepParsing);
 
-File.WriteAllText("data/raw_messages.json", JsonSerializer.Serialize(messages.OrderByDescending(m => m.Timestamp).ToList(), OutputJsonContext.Default.ListParsedMessage));
+File.WriteAllText("data/raw_messages.json", JsonSerializer.Serialize([.. messages.OrderByDescending(m => m.Timestamp)], SlackJsonContext.Default.ListParsedMessage));
 
 // Get Scrandle data
 Console.ForegroundColor = ConsoleColor.Green;
@@ -105,4 +105,4 @@ for (DateOnly date = new(DateTime.Today.Year, 1, 1); date < DateOnly.FromDateTim
     });
 }
 
-File.WriteAllText("data/community_data.json", JsonSerializer.Serialize([.. parsedCommunityDays.OrderByDescending(m => m.Day)], OutputJsonContext.Default.ListParsedCommunityDay));
+File.WriteAllText("data/community_data.json", JsonSerializer.Serialize([.. parsedCommunityDays.OrderByDescending(m => m.Day)], ScrandleJsonContext.Default.ListParsedCommunityDay));

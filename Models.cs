@@ -18,13 +18,6 @@ class Statistics
     public DateOnly CommunityEasiestDay { get; set; } = new();
 }
 
-[JsonSourceGenerationOptions(WriteIndented = true)]
-[JsonSerializable(typeof(List<PlayerStatistics>))]
-[JsonSerializable(typeof(Statistics))]
-internal partial class StatisticsJsonContext : JsonSerializerContext
-{
-}
-
 class PlayerStatistics
 {
     public bool DeletedUser { get; set; }
@@ -65,28 +58,6 @@ class ParsedMessage
     public DateTimeOffset Timestamp { get; set; }
     public short Answers { get; set; } = 0b0000000000;
     public int Score { get; set; }
-}
-
-[JsonSerializable(typeof(List<ParsedMessage>))]
-internal partial class ParsedJsonContext : JsonSerializerContext
-{
-}
-
-
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower)]
-[JsonSerializable(typeof(SlackResponse))]
-[JsonSerializable(typeof(UserResponse))]
-[JsonSerializable(typeof(UserListRequest))]
-[JsonSerializable(typeof(List<UserResult>))]
-internal partial class SlackJsonContext : JsonSerializerContext
-{
-}
-
-[JsonSourceGenerationOptions(WriteIndented = true)]
-[JsonSerializable(typeof(List<ParsedMessage>))]
-[JsonSerializable(typeof(List<ParsedCommunityDay>))]
-internal partial class OutputJsonContext : JsonSerializerContext
-{
 }
 
 class ParsedCommunityDay
@@ -142,12 +113,6 @@ public class CommunityDataDay
     public double Avg { get; set; }
 }
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower)]
-[JsonSerializable(typeof(CommunityDataDay))]
-internal partial class ScrandleJsonContext : JsonSerializerContext
-{
-}
-
 class ReviewedMessage
 {
     public bool DeletedUser { get; set; }
@@ -158,7 +123,27 @@ class ReviewedMessage
     public bool Inverse { get; set; }
 }
 
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower)]
+[JsonSerializable(typeof(SlackResponse))]
+[JsonSerializable(typeof(UserResponse))]
+[JsonSerializable(typeof(UserListRequest))]
+[JsonSerializable(typeof(List<UserResult>))]
+[JsonSerializable(typeof(List<ParsedMessage>))]
+internal partial class SlackJsonContext : JsonSerializerContext
+{
+}
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(List<ParsedCommunityDay>))]
+internal partial class ScrandleJsonContext : JsonSerializerContext
+{
+}
+
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower, WriteIndented = true)]
+[JsonSerializable(typeof(List<PlayerStatistics>))]
+[JsonSerializable(typeof(Statistics))]
+[JsonSerializable(typeof(CommunityDataDay))]
 [JsonSerializable(typeof(List<ReviewedMessage>))]
-internal partial class ReviewedJsonContext : JsonSerializerContext
+internal partial class ScrandleWrappedJsonContext : JsonSerializerContext
 {
 }
