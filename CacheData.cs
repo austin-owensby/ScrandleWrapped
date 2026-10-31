@@ -25,9 +25,9 @@ List<ParsedMessage> messages = [];
 DateTimeOffset? latest = null;
 
 // Check if we already have data and add on to it
-if (File.Exists("raw_messages.json"))
+if (File.Exists("data/raw_messages.json"))
 {
-    string fileContents = File.ReadAllText("raw_messages.json");
+    string fileContents = File.ReadAllText("data/raw_messages.json");
     messages = JsonSerializer.Deserialize(fileContents, OutputJsonContext.Default.ListParsedMessage) ?? [];
 
     latest = messages.First().Timestamp;
@@ -73,7 +73,7 @@ do
 }
 while (keepParsing);
 
-File.WriteAllText("raw_messages.json", JsonSerializer.Serialize(messages.OrderByDescending(m => m.Timestamp).ToList(), OutputJsonContext.Default.ListParsedMessage));
+File.WriteAllText("data/raw_messages.json", JsonSerializer.Serialize(messages.OrderByDescending(m => m.Timestamp).ToList(), OutputJsonContext.Default.ListParsedMessage));
 
 class ParsedMessage
 {
