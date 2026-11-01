@@ -14,7 +14,7 @@ To run a script run `dotnet run <C# file>`
 
 ### Cache Data
 
-This hits Slack's endpoint to scrape data and records it all in a `raw_messages.json`.
+This hits Slack's endpoint to scrape data and records it all in a `raw_messages.json`. It also fetches the community data from scrandle.com and records it to `community_data.json`.
 I've manually replaced the names for deactivated accounts since there were only 5, this could be a future enhancement.
 
 To use this, copy the `appsettings.json` file and rename it to `appsettings.Development.json` and fill in the values. You can grab most of these by visiting Slack from your browser, open your browser's DevTools and inspect some of the Network calls made while navigating the desired channel.
@@ -38,7 +38,7 @@ This takes in the `parsed_messages.json` file and generates various statistics a
 
 ## TODO
 
-- Grab community statistics and matchups for statistics
+- Grab more community statistics and matchups for statistics
 - Grab Scrandlebot stats
 - Flesh out statistics
   - Without community statistics, but with Scrandlebot
@@ -46,7 +46,6 @@ This takes in the `parsed_messages.json` file and generates various statistics a
     - Days beat the Scrandlebot
     - Days Capsher average beat Scrandlebot
   - With community statistics
-    - Community average overall
     - Days beat community average
     - Days beat the average (Community)
     - Days Capsher average beat the community average
@@ -63,3 +62,26 @@ This takes in the `parsed_messages.json` file and generates various statistics a
   - Stats page (Capsher stats, individual stats, percent vs. total, export of raw data)
   - Share button
 - Finalize results on 11/30 and update Scrandlebot to post a link.
+
+### Scrandle data
+Community result data (scrandle.com/results/DAY) comes in the form:
+```json
+{
+    "4": 0.03439,
+    "5": 0.08846,
+    "3": 0.00907,
+    "7": 0.25761,
+    "6": 0.18387,
+    "8": 0.24723,
+    "9": 0.13807,
+    "10": 0.03844,
+    "1": 0.00074,
+    "2": 0.00211,
+    "0": 0,
+    "avg": 7.12347
+}
+```
+
+Figure out how to interpret what all the fields but `avg` mean.
+
+If needed, price rating info is available at scrandle.com/history/DAY. There's also an `elo` field, but I don't understand what it means.

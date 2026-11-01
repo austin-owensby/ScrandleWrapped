@@ -1,12 +1,12 @@
 ﻿#!/usr/bin/env dotnet
 
-#:include SlackGateway.cs
+#:include Gateways.cs
 #:package Microsoft.Extensions.Configuration.Json@10.0.13
 
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 using ScrandleWrapped;
+using Models;
 
 IConfigurationBuilder builder = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -15,6 +15,10 @@ IConfigurationBuilder builder = new ConfigurationBuilder()
 
 IConfiguration config = builder.Build();
 
+// Get Slack data
+Console.ForegroundColor = ConsoleColor.Green;
+Console.WriteLine("Fetching slack data");
+Console.ResetColor();
 SlackGateway slackGateway = new(config);
 
 List<UserResult> users = await slackGateway.GetUsers();
@@ -33,9 +37,13 @@ if (File.Exists("data/raw_messages.json"))
     latest = messages.First().Timestamp;
 }
 
+int numMessages = 0;
 do
 {
     SlackResponse response = await slackGateway.GetNextSetOfData();
+
+    numMessages += response.Messages.Count;
+    Console.WriteLine($"Progress: {numMessages}");
 
     foreach (Message message in response.Messages)
     {
@@ -75,25 +83,26 @@ while (keepParsing);
 
 File.WriteAllText("data/raw_messages.json", JsonSerializer.Serialize(messages.OrderByDescending(m => m.Timestamp).ToList(), OutputJsonContext.Default.ListParsedMessage));
 
-class ParsedMessage
+// Get Scrandle data
+Console.ForegroundColor = ConsoleColor.Green;
+Console.WriteLine("Fetching community data");
+Console.ResetColor();
+ScrandleGateway scrandleGateway = new();
+
+List<ParsedCommunityDay> parsedCommunityDays = [];
+for (DateOnly date = new(DateTime.Today.Year, 1, 1); date < DateOnly.FromDateTime(DateTime.Today); date = date.AddDays(1))
 {
-    public bool DeletedUser { get; set; }
-    public string User { get; set; } = string.Empty;
-    public string Text { get; set; } = string.Empty;
-    public DateTimeOffset Timestamp { get; set; }
+    if (date.Day == 1)
+    {
+        Console.WriteLine($"Progress: {date}");
+    }
+
+    var data = await scrandleGateway.GetDayData(date);
+    parsedCommunityDays.Add(new ParsedCommunityDay
+    {
+        Avg = data.Avg,
+        Day = date
+    });
 }
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower)]
-[JsonSerializable(typeof(SlackResponse))]
-[JsonSerializable(typeof(UserResponse))]
-[JsonSerializable(typeof(UserListRequest))]
-[JsonSerializable(typeof(List<UserResult>))]
-internal partial class SlackJsonContext : JsonSerializerContext
-{
-}
-
-[JsonSourceGenerationOptions(WriteIndented = true)]
-[JsonSerializable(typeof(List<ParsedMessage>))]
-internal partial class OutputJsonContext : JsonSerializerContext
-{
-}
+File.WriteAllText("data/community_data.json", JsonSerializer.Serialize([.. parsedCommunityDays.OrderByDescending(m => m.Day)], OutputJsonContext.Default.ListParsedCommunityDay));
