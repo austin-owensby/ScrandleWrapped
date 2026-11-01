@@ -25,14 +25,14 @@ List<UserResult> users = await slackGateway.GetUsers();
 Dictionary<string, string> userLookup = users.ToDictionary(u => u.ID, u => u.Profile.RealName);
 
 bool keepParsing = true;
-List<ParsedMessage> messages = [];
+List<RawMessage> messages = [];
 DateTimeOffset? latest = null;
 
 // Check if we already have data and add on to it
 if (File.Exists("data/raw_messages.json"))
 {
     string fileContents = File.ReadAllText("data/raw_messages.json");
-    messages = JsonSerializer.Deserialize(fileContents, SlackJsonContext.Default.ListParsedMessage) ?? [];
+    messages = JsonSerializer.Deserialize(fileContents, SlackJsonContext.Default.ListRawMessage) ?? [];
 
     latest = messages.First().Timestamp;
 }
@@ -56,7 +56,7 @@ do
         if (double.TryParse(message.TS, out double parsedTimestamp))
         {
             bool deletedUser = !userLookup.TryGetValue(message.User, out string? username);
-            ParsedMessage parsedMessage = new()
+            RawMessage rawMessage = new()
             {
                 DeletedUser = deletedUser,
                 User = username ?? message.User,
@@ -64,14 +64,14 @@ do
                 Timestamp = DateTimeOffset.FromUnixTimeSeconds((long)parsedTimestamp).ToLocalTime()
             };
 
-            if (parsedMessage.Timestamp.Year < DateTimeOffset.Now.Year || parsedMessage.Timestamp == latest)
+            if (rawMessage.Timestamp.Year < DateTimeOffset.Now.Year || rawMessage.Timestamp == latest)
             {
                 // Only parse this year
                 keepParsing = false;
                 break;
             }
 
-            messages.Add(parsedMessage);
+            messages.Add(rawMessage);
         }
         else
         {
@@ -81,7 +81,7 @@ do
 }
 while (keepParsing);
 
-File.WriteAllText("data/raw_messages.json", JsonSerializer.Serialize([.. messages.OrderByDescending(m => m.Timestamp)], SlackJsonContext.Default.ListParsedMessage));
+File.WriteAllText("data/raw_messages.json", JsonSerializer.Serialize([.. messages.OrderByDescending(m => m.Timestamp)], SlackJsonContext.Default.ListRawMessage));
 
 // Get Scrandle data
 Console.ForegroundColor = ConsoleColor.Green;
@@ -89,20 +89,26 @@ Console.WriteLine("Fetching community data");
 Console.ResetColor();
 ScrandleGateway scrandleGateway = new();
 
-List<ParsedCommunityDay> parsedCommunityDays = [];
-for (DateOnly date = new(DateTime.Today.Year, 1, 1); date < DateOnly.FromDateTime(DateTime.Today); date = date.AddDays(1))
-{
-    if (date.Day == 1)
-    {
-        Console.WriteLine($"Progress: {date}");
-    }
+DateOnly firstDayOfYear = new(DateTime.Today.Year, 1, 1);
+List<(DateOnly, Task<CommunityDataDay> task)> httpTasks = [.. Enumerable
+    .Range(0, DateTime.Today.DayOfYear - 1)
+    .Select(firstDayOfYear.AddDays)
+    .Select(d => (date: d, task: scrandleGateway.GetDayData(d)))];
+await Task.WhenAll(httpTasks.Select(t => t.task));
 
-    var data = await scrandleGateway.GetDayData(date);
+Console.ForegroundColor = ConsoleColor.Green;
+Console.WriteLine("Saving community data");
+Console.ResetColor();
+
+List<ParsedCommunityDay> parsedCommunityDays = [];
+foreach (var (date, task) in httpTasks)
+{
     parsedCommunityDays.Add(new ParsedCommunityDay
     {
-        Avg = data.Avg,
+        Avg = task.Result.Avg,
         Day = date
     });
 }
+
 
 File.WriteAllText("data/community_data.json", JsonSerializer.Serialize([.. parsedCommunityDays.OrderByDescending(m => m.Day)], ScrandleJsonContext.Default.ListParsedCommunityDay));

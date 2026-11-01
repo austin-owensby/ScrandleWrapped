@@ -7,7 +7,7 @@ using System.Text.Json;
 using Models;
 
 string slackFileContents = File.ReadAllText("data/parsed_messages.json");
-List<ParsedMessage> parsedMessages = JsonSerializer.Deserialize(slackFileContents, SlackJsonContext.Default.ListParsedMessage) ?? [];
+List<ParsedMessage> parsedMessages = JsonSerializer.Deserialize(slackFileContents, ScrandleWrappedJsonContext.Default.ListParsedMessage) ?? [];
 var capsherDictByUser = parsedMessages.GroupBy(mes => mes.User).ToFrozenDictionary(g => g.Key);
 var capsherDictByDay = parsedMessages.GroupBy(mes => mes.Timestamp.Date).ToFrozenDictionary(g => g.Key);
 
@@ -20,19 +20,16 @@ Statistics statistics = new();
 var capsherDates = parsedMessages.GroupBy(m => m.Timestamp.Date).ToList();
 statistics.CapsherAverage = parsedMessages.Average(m => m.Score);
 statistics.CommunityAverage = parsedCommunityData.Average(d => d.Avg);
-statistics.CapsherAveragePerDay = capsherDates.ToDictionary(g => g.Key, g => g.ToList().Average(m => m.Score));
-statistics.CommunityAveragePerDay = communityDataDict.ToDictionary(kp => kp.Key, kp => kp.Value.Avg);
-statistics.DaysAboveCommunityAverage = statistics.CapsherAveragePerDay.Count(cday => cday.Value > statistics.CommunityAverage);
+statistics.CapsherAveragePerDay = capsherDates.ToFrozenDictionary(g => g.Key, g => g.ToList().Average(m => m.Score));
+statistics.CommunityAveragePerDay = communityDataDict.ToFrozenDictionary(kp => kp.Key, kp => kp.Value.Avg);
 statistics.DaysCapsherBeatCommunity = statistics.CapsherAveragePerDay.Count(cday => cday.Value > communityDataDict[DateOnly.FromDateTime(cday.Key)].Avg);
 statistics.CapsherHardestDay = DateOnly.FromDateTime(statistics.CapsherAveragePerDay.MinBy(kp => kp.Value).Key);
 statistics.CapsherEasiestDay = DateOnly.FromDateTime(statistics.CapsherAveragePerDay.MaxBy(kp => kp.Value).Key);
 statistics.CommunityHardestDay = parsedCommunityData.MinBy(kp => kp.Avg)!.Day;
 statistics.CommunityEasiestDay = parsedCommunityData.MaxBy(kp => kp.Avg)!.Day;
 
-foreach (string user in capsherDictByUser.Select(m => m.Key).Order())
+foreach (var (user, userMessages) in capsherDictByUser.OrderBy(kp => kp.Key))
 {
-    var userMessages = capsherDictByUser[user];
-
     PlayerStatistics playerStatistic = new()
     {
         DeletedUser = userMessages.First().DeletedUser,
@@ -68,14 +65,9 @@ foreach (string user in capsherDictByUser.Select(m => m.Key).Order())
 
         playerStatistic.ScoreFrequency[message.Score]++;
 
-        if (statistics.CapsherAveragePerDay[message.Timestamp.Date] < message.Score)
+        if (message.Score > statistics.CapsherAveragePerDay[message.Timestamp.Date])
         {
             playerStatistic.BeatCapsherAverage++;
-        }
-
-        if (message.Score > statistics.CommunityAverage)
-        {
-            playerStatistic.BeatCommunityAverage++;
         }
 
         if (message.Score > communityDataDict[messageDay].Avg)
@@ -104,16 +96,16 @@ foreach (string user in capsherDictByUser.Select(m => m.Key).Order())
 
         playerStatistic.TeamworkCount += capsherDictByDay[message.Timestamp.Date].Count(m => m.User != message.User && m.Answers == message.Answers);
 
-        var dayDiff = communityDataDict[messageDay].Avg - message.Score;
+        var diffToCommunityAvg = communityDataDict[messageDay].Avg - message.Score;
 
-        if (dayDiff > currentBestDiff)
+        if (diffToCommunityAvg > currentBestDiff)
         {
-            currentBestDiff = dayDiff;
+            currentBestDiff = diffToCommunityAvg;
             playerStatistic.BestDay = messageDay;
         }
-        if (dayDiff < currentWorstDiff)
+        if (diffToCommunityAvg < currentWorstDiff)
         {
-            currentWorstDiff = dayDiff;
+            currentWorstDiff = diffToCommunityAvg;
             playerStatistic.WorstDay = messageDay;
         }
     }

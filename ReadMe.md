@@ -38,7 +38,6 @@ This takes in the `parsed_messages.json` file and generates various statistics a
 
 ## TODO
 
-- Grab more community statistics and matchups for statistics
 - Grab Scrandlebot stats
 - Flesh out statistics
   - Without community statistics, but with Scrandlebot
@@ -76,6 +75,6 @@ Community result data (scrandle.com/results/DAY) comes in the form:
 }
 ```
 
-Figure out how to interpret what all the fields but `avg` mean.
+The non-`avg` fields show the score distribution for the community.
 
-If needed, price rating info is available at scrandle.com/history/DAY. There's also an `elo` field, but I don't understand what it means.
+If needed, price rating info is available at scrandle.com/history/DAY. The rating info is how Scrandlebot calculates the difficulty by comparing the difference between the matchup's ratings.
