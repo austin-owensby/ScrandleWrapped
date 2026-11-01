@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using Models;
 
 string fileContents = File.ReadAllText("data/reviewed_messages.json");
-List<ReviewedMessage> reviewedMessages = JsonSerializer.Deserialize(fileContents, ReviewedJsonContext.Default.ListReviewedMessage) ?? [];
+List<ReviewedMessage> reviewedMessages = JsonSerializer.Deserialize(fileContents, ScrandleWrappedJsonContext.Default.ListReviewedMessage) ?? [];
 
 List<ParsedMessage> parsedMessages = [];
 DateTimeOffset? latest = null;
@@ -17,7 +17,7 @@ DateTimeOffset? latest = null;
 if (File.Exists("data/parsed_messages.json"))
 {
     fileContents = File.ReadAllText("data/parsed_messages.json");
-    parsedMessages = JsonSerializer.Deserialize(fileContents, ParsedJsonContext.Default.ListParsedMessage) ?? [];
+    parsedMessages = JsonSerializer.Deserialize(fileContents, SlackJsonContext.Default.ListParsedMessage) ?? [];
 
     latest = parsedMessages.First().Timestamp;
 }
@@ -89,7 +89,7 @@ foreach (ReviewedMessage message in reviewedMessages)
     parsedMessages.Add(parsedMessage);
 }
 
-File.WriteAllText("data/parsed_messages.json", JsonSerializer.Serialize(parsedMessages.OrderByDescending(m => m.Timestamp).ToList(), ParsedJsonContext.Default.ListParsedMessage));
+File.WriteAllText("data/parsed_messages.json", JsonSerializer.Serialize([.. parsedMessages.OrderByDescending(m => m.Timestamp)], SlackJsonContext.Default.ListParsedMessage));
 
 
 partial class Program

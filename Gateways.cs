@@ -77,7 +77,7 @@ public class ScrandleGateway()
 
         response.EnsureSuccessStatusCode();
 
-        CommunityDataDay responseBody = await response.Content.ReadFromJsonAsync(ScrandleJsonContext.Default.CommunityDataDay) ?? throw new Exception("Unable to parse scrandle response.");
+        CommunityDataDay responseBody = await response.Content.ReadFromJsonAsync(ScrandleWrappedJsonContext.Default.CommunityDataDay) ?? throw new Exception("Unable to parse scrandle response.");
 
         return responseBody;
     }
