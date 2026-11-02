@@ -105,7 +105,7 @@ foreach (var (user, userMessages) in capsherDictByUser.OrderBy(kp => kp.Key))
 
         playerStatistic.TeamworkCount += capsherDictByDay[message.Timestamp.Date].Count(m => m.User != message.User && m.Answers == message.Answers);
 
-        var diffToCommunityAvg = communityDataDict[messageDay].Avg - message.Score;
+        var diffToCommunityAvg = message.Score - communityDataDict[messageDay].Avg;
 
         if (diffToCommunityAvg > currentBestDiff)
         {
@@ -124,7 +124,12 @@ foreach (var (user, userMessages) in capsherDictByUser.OrderBy(kp => kp.Key))
         {
             var bitArrayIndex = 9 - answerIndex;
             var difficulty = matchupDataDict[messageDay].Difficulties[answerIndex];
-            if (answerInBits[answerIndex] && difficulty > playerStatistic.BestMatchup.Difficulty)
+            if (difficulty == 0)
+            {
+                continue;
+            }
+
+            if (answerInBits[bitArrayIndex] && difficulty > playerStatistic.BestMatchup.Difficulty)
             {
                 playerStatistic.BestMatchup = new MatchupStatistic
                 {
@@ -133,7 +138,7 @@ foreach (var (user, userMessages) in capsherDictByUser.OrderBy(kp => kp.Key))
                     ItemIndex = answerIndex
                 };
             }
-            else if (!answerInBits[answerIndex] && difficulty < playerStatistic.WorstMatchup.Difficulty)
+            else if (!answerInBits[bitArrayIndex] && difficulty < playerStatistic.WorstMatchup.Difficulty)
             {
                 playerStatistic.WorstMatchup = new MatchupStatistic
                 {
