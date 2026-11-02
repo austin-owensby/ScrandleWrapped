@@ -37,12 +37,6 @@ This outputs a `parsed_messages.json` file.
 This takes in the `parsed_messages.json` file and generates various statistics and outputs them to `statistics.json`
 
 ## TODO
-
-- Flesh out statistics
-  - Without community statistics, but with Scrandlebot
-    - Scrandlebot average overall
-    - Days beat the Scrandlebot
-    - Days Capsher average beat Scrandlebot
 - Build a GitHub site to display data and show personalized stats
   - Select yourself
   - Show Capsher stats (Number of puzzles, days Capsher beat the community, Capsher best day, Capsher worst day)

@@ -107,11 +107,14 @@ public class FoodItem
 class Statistics
 {
     public List<PlayerStatistics> PlayerStatistics { get; set; } = [];
+    public int DaysPlayed { get; set; }
     public double CapsherAverage { get; set; }
-    public double CommunityAverage { get; set; } = new();
+    public double CommunityAverage { get; set; }
+    public double ScrandlebotAverage { get; set; }
     public FrozenDictionary<DateTime, double> CapsherAveragePerDay { get; set; } = [];
     public FrozenDictionary<DateOnly, double> CommunityAveragePerDay { get; set; } = [];
     public int DaysCapsherBeatCommunity { get; set; }
+    public int DaysCapsherBeatScrandlebot { get; set; }
     public DateOnly CapsherHardestDay { get; set; } = new();
     public DateOnly CapsherEasiestDay { get; set; } = new();
     public DateOnly CommunityHardestDay { get; set; } = new();
@@ -126,8 +129,9 @@ class PlayerStatistics
     public double Average { get; set; }
     public int BestStreak { get; set; } = 1;
     public int BestPerfectStreak { get; set; }
-    public int BeatCapsherAverage { get; set; } = 0;
-    public int BeatCommunity { get; set; } = 0;
+    public int BeatCapsherAverage { get; set; }
+    public int BeatCommunityCount { get; set; }
+    public int BeatScrandlebotCount { get; set; }
     public int BlewItCount { get; set; }
     public int TeamworkCount { get; set; }
     public DateOnly BestDay { get; set; } = DateOnly.MinValue;

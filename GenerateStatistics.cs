@@ -22,14 +22,21 @@ var matchupDataDict = parsedMatchupData
     .Select(d => (d.Day, Difficulties: d.Data.Select(pair => (100 - Math.Abs(pair[0].Rating - pair[1].Rating)) / 100).ToArray()))
     .ToFrozenDictionary(ks => ks.Day);
 
+string scrandlebotFileContents = File.ReadAllText("data/scrandlebot_predictions.json");
+List<ScrandlebotPrediction> scrandlebotData = JsonSerializer.Deserialize(scrandlebotFileContents, ScrandleWrappedJsonContext.Default.ListScrandlebotPrediction) ?? [];
+var scrandlebotDataDict = scrandlebotData.ToFrozenDictionary(ks => ks.Day);
+
 Statistics statistics = new();
 
 var capsherDates = parsedMessages.GroupBy(m => m.Timestamp.Date).ToList();
+statistics.DaysPlayed = capsherDates.Count;
 statistics.CapsherAverage = parsedMessages.Average(m => m.Score);
 statistics.CommunityAverage = parsedCommunityData.Average(d => d.Avg);
+statistics.ScrandlebotAverage = scrandlebotData.Average(d => d.Prediction);
 statistics.CapsherAveragePerDay = capsherDates.ToFrozenDictionary(g => g.Key, g => g.ToList().Average(m => m.Score));
 statistics.CommunityAveragePerDay = communityDataDict.ToFrozenDictionary(kp => kp.Key, kp => kp.Value.Avg);
 statistics.DaysCapsherBeatCommunity = statistics.CapsherAveragePerDay.Count(cday => cday.Value > communityDataDict[DateOnly.FromDateTime(cday.Key)].Avg);
+statistics.DaysCapsherBeatScrandlebot = statistics.CapsherAveragePerDay.Count(cday => cday.Value > (scrandlebotDataDict.ContainsKey(DateOnly.FromDateTime(cday.Key)) ? scrandlebotDataDict[DateOnly.FromDateTime(cday.Key)].Prediction : 0));
 statistics.CapsherHardestDay = DateOnly.FromDateTime(statistics.CapsherAveragePerDay.MinBy(kp => kp.Value).Key);
 statistics.CapsherEasiestDay = DateOnly.FromDateTime(statistics.CapsherAveragePerDay.MaxBy(kp => kp.Value).Key);
 statistics.CommunityHardestDay = parsedCommunityData.MinBy(kp => kp.Avg)!.Day;
@@ -81,7 +88,12 @@ foreach (var (user, userMessages) in capsherDictByUser.OrderBy(kp => kp.Key))
 
         if (message.Score > communityDataDict[messageDay].Avg)
         {
-            playerStatistic.BeatCommunity++;
+            playerStatistic.BeatCommunityCount++;
+        }
+
+        if (message.Score > (scrandlebotDataDict.TryGetValue(messageDay, out ScrandlebotPrediction? value) ? value.Prediction : 0))
+        {
+            playerStatistic.BeatScrandlebotCount++;
         }
 
         if (message.Score == 10)
