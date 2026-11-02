@@ -1,3 +1,4 @@
 bin
 appsettings.Development.json
 data/*
+scrandle-wrapped/src/assets/*.json

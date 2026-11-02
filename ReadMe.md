@@ -5,7 +5,7 @@ This is my tools to process Slack submitted Scrandle data to produce a fun end o
 ## Website
 The Scrandle Wrapped site is hosted from GitHub pages
 
-It can be deployed with `ng deploy --base-href=/ScrandleWrapped/`
+It can be deployed with `npm run deploy`
 
 ## Running
 

@@ -1,11 +1,13 @@
 {
   "name": "scrandle-wrapped",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
+    "start": "npm run prepare && ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "watch": "ng build --watch --configuration development",
+    "prepare": "node prepare.js",
+    "deploy": "npm run prepare && ng deploy --base-href=/ScrandleWrapped/"
   },
   "private": true,
   "packageManager": "npm@11.20.0",
