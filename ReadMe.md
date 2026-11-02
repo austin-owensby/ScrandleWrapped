@@ -2,6 +2,11 @@
 
 This is my tools to process Slack submitted Scrandle data to produce a fun end of year summary personalized for individuals
 
+## Website
+The Scrandle Wrapped site is hosted from GitHub pages
+
+It can be deployed with `ng deploy --base-href=/ScrandleWrapped/`
+
 ## Running
 
 This uses C#s newer method of running scripts individually outside of a csproj.
