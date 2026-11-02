@@ -9,7 +9,7 @@ export class StatisticsService {
     private http = inject(HttpClient);
 
     loadData = () => {
-        this.http.get<Statistics>('/assets/statistics.json').subscribe({
+        this.http.get<Statistics>('statistics.json').subscribe({
             next: (res) => {
                 this._statistics.set(res);
             },
