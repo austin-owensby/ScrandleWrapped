@@ -100,8 +100,8 @@ Console.ForegroundColor = ConsoleColor.Green;
 Console.WriteLine("Saving community data");
 Console.ResetColor();
 
-List<CommunityDayData> communityDayDatas = [..httpTasks.Select(t => t.communityTask.Result)];
-List<MatchupDayData> matchupDayDatas = [..httpTasks.Select(t => t.matchupTask.Result)];
+List<CommunityDayData> communityDayDatas = [.. httpTasks.Select(t => t.communityTask.Result)];
+List<MatchupDayData> matchupDayDatas = [.. httpTasks.Select(t => t.matchupTask.Result)];
 
 File.WriteAllText("data/community_data.json", JsonSerializer.Serialize([.. communityDayDatas.OrderByDescending(m => m.Day)], ScrandleJsonContext.Default.ListCommunityDayData));
 

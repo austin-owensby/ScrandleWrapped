@@ -55,7 +55,7 @@ foreach (var (user, userMessages) in capsherDictByUser.OrderBy(kp => kp.Key))
 
     foreach (ParsedMessage message in userMessages)
     {
-        var messageDay = DateOnly.FromDateTime(message.Timestamp.Date);
+        DateOnly messageDay = DateOnly.FromDateTime(message.Timestamp.Date);
 
         if (message.Timestamp.Date.AddDays(1) == nextDay || message.Timestamp.Date.DayOfWeek == DayOfWeek.Friday && message.Timestamp.Date.AddDays(3) == nextDay)
         {
@@ -105,7 +105,7 @@ foreach (var (user, userMessages) in capsherDictByUser.OrderBy(kp => kp.Key))
 
         playerStatistic.TeamworkCount += capsherDictByDay[message.Timestamp.Date].Count(m => m.User != message.User && m.Answers == message.Answers);
 
-        var diffToCommunityAvg = message.Score - communityDataDict[messageDay].Avg;
+        double diffToCommunityAvg = message.Score - communityDataDict[messageDay].Avg;
 
         if (diffToCommunityAvg > currentBestDiff)
         {
@@ -119,11 +119,11 @@ foreach (var (user, userMessages) in capsherDictByUser.OrderBy(kp => kp.Key))
         }
 
         // Bit arrays are little endian
-        var answerInBits = new BitArray([message.Answers]);
+        BitArray answerInBits = new([message.Answers]);
         foreach (int answerIndex in Enumerable.Range(0, 10))
         {
-            var bitArrayIndex = 9 - answerIndex;
-            var difficulty = matchupDataDict[messageDay].Difficulties[answerIndex];
+            int bitArrayIndex = 9 - answerIndex;
+            double difficulty = matchupDataDict[messageDay].Difficulties[answerIndex];
             if (difficulty == 0)
             {
                 continue;
