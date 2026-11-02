@@ -83,6 +83,27 @@ while (keepParsing);
 
 File.WriteAllText("data/raw_messages.json", JsonSerializer.Serialize([.. messages.OrderByDescending(m => m.Timestamp)], ScrandleWrappedJsonContext.Default.ListRawMessage));
 
+// Get Scrandlebot data
+GitHubGateway gitHubGateway = new();
+List<(DateOnly Date, double Rating)> rawRatings = await gitHubGateway.GetScrandlebotRating();
+
+rawRatings = rawRatings.Where(day => day.Date.Year == DateTimeOffset.Now.Year).ToList();
+
+List<ScrandlebotPrediction> predictions = [];
+foreach ((DateOnly Date, double Rating) in rawRatings)
+{
+    // Scrandlebot's prediction formula
+    double prediction = Math.Min(9.9, 62.1 * Math.Pow(Rating, -0.87));
+
+    predictions.Add(new()
+    {
+        Day = Date,
+        Prediction = prediction
+    });
+}
+
+File.WriteAllText("data/scrandlebot_predictions.json", JsonSerializer.Serialize([.. predictions.OrderByDescending(m => m.Day)], ScrandleWrappedJsonContext.Default.ListScrandlebotPrediction));
+
 // Get Scrandle data
 Console.ForegroundColor = ConsoleColor.Green;
 Console.WriteLine("Fetching community data, this takes a bit");

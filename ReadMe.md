@@ -38,7 +38,6 @@ This takes in the `parsed_messages.json` file and generates various statistics a
 
 ## TODO
 
-- Grab Scrandlebot stats
 - Flesh out statistics
   - Without community statistics, but with Scrandlebot
     - Scrandlebot average overall

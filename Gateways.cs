@@ -67,7 +67,7 @@ public class SlackGateway
     }
 }
 
-public class ScrandleGateway()
+public class ScrandleGateway
 {
     private readonly HttpClient _client = new();
 
@@ -93,5 +93,28 @@ public class ScrandleGateway()
         responseBody.Day = day;
 
         return responseBody;
+    }
+}
+
+public class GitHubGateway
+{
+    private readonly HttpClient _client = new();
+
+    public async Task<List<(DateOnly, double)>> GetScrandlebotRating()
+    {
+        HttpResponseMessage response = await _client.GetAsync("https://raw.githubusercontent.com/austin-owensby/ScrandleStats/refs/heads/master/historical_data.csv");
+
+        response.EnsureSuccessStatusCode();
+
+        string content = await response.Content.ReadAsStringAsync();
+
+        List<(DateOnly, double)> parsedContent = [..
+            content.Split("\n")
+            .Where(line => !string.IsNullOrWhiteSpace(line))
+            .Select(line => line.Split(","))
+            .Select(parts => (DateOnly.Parse(parts[0]), double.Parse(parts[1])))
+        ];
+
+        return parsedContent;
     }
 }

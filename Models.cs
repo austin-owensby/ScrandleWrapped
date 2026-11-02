@@ -77,6 +77,12 @@ class ParsedMessage
     public int Score { get; set; }
 }
 
+class ScrandlebotPrediction
+{
+    public DateOnly Day { get; set; }
+    public double Prediction { get; set; }
+}
+
 // From Scrandle.com
 public class CommunityDayData
 {
@@ -175,6 +181,7 @@ internal partial class ScrandleJsonContext : JsonSerializerContext
 [JsonSerializable(typeof(List<ReviewedMessage>))]
 [JsonSerializable(typeof(List<ParsedMessage>))]
 [JsonSerializable(typeof(List<RawMessage>))]
+[JsonSerializable(typeof(List<ScrandlebotPrediction>))]
 internal partial class ScrandleWrappedJsonContext : JsonSerializerContext
 {
 }
