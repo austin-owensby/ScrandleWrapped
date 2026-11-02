@@ -71,13 +71,26 @@ public class ScrandleGateway()
 {
     private readonly HttpClient _client = new();
 
-    public async Task<CommunityDataDay> GetDayData(DateOnly day)
+    public async Task<CommunityDayData> GetDayCommunityData(DateOnly day)
     {
         HttpResponseMessage response = await _client.GetAsync($"https://scrandle.com/results/{day:yyyy-MM-dd}");
 
         response.EnsureSuccessStatusCode();
 
-        CommunityDataDay responseBody = await response.Content.ReadFromJsonAsync(ScrandleWrappedJsonContext.Default.CommunityDataDay) ?? throw new Exception("Unable to parse scrandle response.");
+        CommunityDayData responseBody = await response.Content.ReadFromJsonAsync(ScrandleJsonContext.Default.CommunityDayData) ?? throw new Exception("Unable to parse scrandle response.");
+        responseBody.Day = day;
+
+        return responseBody;
+    }
+
+    public async Task<MatchupDayData> GetDayMatchupData(DateOnly day)
+    {
+        HttpResponseMessage response = await _client.GetAsync($"https://scrandle.com/history/{day:yyyy-MM-dd}");
+
+        response.EnsureSuccessStatusCode();
+
+        MatchupDayData responseBody = await response.Content.ReadFromJsonAsync(ScrandleJsonContext.Default.MatchupDayData) ?? throw new Exception("Unable to parse scrandle response.");
+        responseBody.Day = day;
 
         return responseBody;
     }

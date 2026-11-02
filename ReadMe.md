@@ -44,9 +44,6 @@ This takes in the `parsed_messages.json` file and generates various statistics a
     - Scrandlebot average overall
     - Days beat the Scrandlebot
     - Days Capsher average beat Scrandlebot
-  - With community statistics
-    - Best match up (Correct answer on difficult matchup)
-    - Worst match up (Incorrect answer on easy matchup)
 - Build a GitHub site to display data and show personalized stats
   - Select yourself
   - Show Capsher stats (Number of puzzles, days Capsher beat the community, Capsher best day, Capsher worst day)
@@ -77,4 +74,4 @@ Community result data (scrandle.com/results/DAY) comes in the form:
 
 The non-`avg` fields show the score distribution for the community.
 
-If needed, price rating info is available at scrandle.com/history/DAY. The rating info is how Scrandlebot calculates the difficulty by comparing the difference between the matchup's ratings.
+Price rating info is available at scrandle.com/history/DAY. The rating info is how Scrandlebot calculates the difficulty by comparing the difference between the matchup's ratings. The model is complex; the relevant parts are specified in the MatchupDayData class.

@@ -78,15 +78,23 @@ class ParsedMessage
 }
 
 // From Scrandle.com
-class ParsedCommunityDay
+public class CommunityDayData
 {
     public DateOnly Day { get; set; }
     public double Avg { get; set; }
 }
 
-public class CommunityDataDay
+public class MatchupDayData
 {
-    public double Avg { get; set; }
+    public DateOnly Day { get; set; }
+    // Expect this to be a 10x2 array
+    public List<List<FoodItem>> Data { get; set; } = [];
+}
+
+public class FoodItem
+{
+    // We only care about the rating
+    public double Rating { get; set; }
 }
 
 // Output stats
@@ -118,6 +126,8 @@ class PlayerStatistics
     public int TeamworkCount { get; set; }
     public DateOnly BestDay { get; set; } = DateOnly.MinValue;
     public DateOnly WorstDay { get; set; } = DateOnly.MinValue;
+    public MatchupStatistic BestMatchup { get; set; } = new();
+    public MatchupStatistic WorstMatchup { get; set; } = new();
     public Dictionary<int, int> ScoreFrequency { get; set; } = new()
     {
         {0, 0},
@@ -134,28 +144,37 @@ class PlayerStatistics
     };
 }
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower, WriteIndented = true)]
+class MatchupStatistic
+{
+    public DateOnly Day { get; set; } = DateOnly.MinValue;
+    public int ItemIndex { get; set; }
+    public double Difficulty { get; set; }
+}
+
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower)]
 [JsonSerializable(typeof(SlackResponse))]
 [JsonSerializable(typeof(UserResponse))]
 [JsonSerializable(typeof(UserListRequest))]
 [JsonSerializable(typeof(List<UserResult>))]
-[JsonSerializable(typeof(List<RawMessage>))]
 internal partial class SlackJsonContext : JsonSerializerContext
 {
 }
 
-[JsonSourceGenerationOptions(WriteIndented = true)]
-[JsonSerializable(typeof(List<ParsedCommunityDay>))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower, WriteIndented = true)]
+[JsonSerializable(typeof(CommunityDayData))]
+[JsonSerializable(typeof(List<CommunityDayData>))]
+[JsonSerializable(typeof(MatchupDayData))]
+[JsonSerializable(typeof(List<MatchupDayData>))]
 internal partial class ScrandleJsonContext : JsonSerializerContext
 {
 }
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower, WriteIndented = true)]
+[JsonSourceGenerationOptions(WriteIndented = true, PropertyNameCaseInsensitive = true)]
 [JsonSerializable(typeof(List<PlayerStatistics>))]
 [JsonSerializable(typeof(Statistics))]
-[JsonSerializable(typeof(CommunityDataDay))]
 [JsonSerializable(typeof(List<ReviewedMessage>))]
 [JsonSerializable(typeof(List<ParsedMessage>))]
+[JsonSerializable(typeof(List<RawMessage>))]
 internal partial class ScrandleWrappedJsonContext : JsonSerializerContext
 {
 }
