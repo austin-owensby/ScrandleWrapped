@@ -5,7 +5,18 @@ This is my tools to process Slack submitted Scrandle data to produce a fun end o
 ## Website
 The Scrandle Wrapped site is hosted from GitHub pages
 
-It can be deployed with `npm run deploy`
+The frontend code is stored in the `scrandle-wrapped` folder
+
+### Setup
+This app runs on Angular 22 and was built with the latest node (v26)
+
+With node installed, run `npm i` from the frontend folder.
+
+### Run
+Run `npm start` from the frontend folder.
+
+### Deploy
+Run `npm run deploy` from the frontend folder.
 
 ## Running
 
@@ -43,12 +54,10 @@ This takes in the `parsed_messages.json` file and generates various statistics a
 
 ## TODO
 - Build a GitHub site to display data and show personalized stats
-  - Select yourself
-  - Show Capsher stats (Number of puzzles, days Capsher beat the community, Capsher best day, Capsher worst day)
-  - Show individual stats as a build up (Days played, average, best day, worst day, best matchup, worst matchup)
-  - Give out awards for special achievements, choose most impressive and try to keep unique
-  - Stats page (Capsher stats, individual stats, percent vs. total, export of raw data)
-  - Share button
+   - More details are in the components of the components
+   - Overall I'm wanting this to be polished and flashy.
+      - Don't want just basic material styling, but something fun
+      - Needs to work on mobile and desktop
 - Finalize results on 11/30 and update Scrandlebot to post a link.
 
 ### Scrandle data
