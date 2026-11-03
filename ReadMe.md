@@ -59,6 +59,7 @@ This takes in the `parsed_messages.json` file and generates various statistics a
       - Don't want just basic material styling, but something fun
       - Needs to work on mobile and desktop
 - Finalize results on 11/30 and update Scrandlebot to post a link.
+   - Update Slack images since some are Halloween based and others may be Christmas based by then
 
 ### Scrandle data
 Community result data (scrandle.com/results/DAY) comes in the form:
