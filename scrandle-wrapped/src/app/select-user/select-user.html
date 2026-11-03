@@ -1,10 +1,10 @@
-<select>
+<select [(ngModel)]="selectedUser" (change)="selectUser()">
     @for(user of users(); track user) {
     <option>{{user}}</option>
     }
 </select>
 
-/*
+<!--
 TODO
 Once a user is selected, move on to the stat slideshow
-*/
+-->

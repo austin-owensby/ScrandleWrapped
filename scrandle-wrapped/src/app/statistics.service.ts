@@ -6,6 +6,9 @@ export class StatisticsService {
     private _statistics = signal<Statistics | null>(null);
     readonly statistics = this._statistics.asReadonly();
 
+    private _user = signal<string | null>(window.localStorage.getItem('user'));
+    readonly user = this._user.asReadonly();
+
     private http = inject(HttpClient);
 
     loadData = () => {
@@ -15,6 +18,11 @@ export class StatisticsService {
             },
             error: (err) => console.error('Error loading statistics', err)
         });
+    }
+
+    selectUser(user: string) {
+        this._user.set(user);
+        window.localStorage.setItem('user', user);
     }
 }
 

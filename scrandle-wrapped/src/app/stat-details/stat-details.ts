@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { StatisticsService } from '../statistics.service';
 
 @Component({
   imports: [],
@@ -6,4 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './stat-details.css',
   templateUrl: './stat-details.html',
 })
-export class StatDetails {}
+export class StatDetails {
+  statisticsService = inject(StatisticsService);
+}
