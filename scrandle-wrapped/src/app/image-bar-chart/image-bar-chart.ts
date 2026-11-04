@@ -18,10 +18,13 @@ export interface ImageBarItem { label: string; value: number; img: string }
 })
 export class ImageBarChart {
   ready = signal(false);
-  statisticsService = inject(StatisticsService)
+  statisticsService = inject(StatisticsService);
 
   items = input.required<ImageBarItem[]>();
   images = input.required<HTMLImageElement[]>();
+  percent = input<boolean>(false);
+  min = input<number>();
+  max = input<number>();
   user = this.statisticsService.user;
 
   data: ChartConfiguration<'bar'>['data'] = {
@@ -34,7 +37,7 @@ export class ImageBarChart {
     maintainAspectRatio: false,
     layout: { padding: { top: 120 } },
     plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero: true, grace: '10%' } },
+    scales: { y: { beginAtZero: true, min: this.min(), max: this.max() ?? 1, grace: '10%', ticks: { format: { style: 'percent' } } } },
   };
 
   plugins: Plugin<'bar'>[] = [];
@@ -53,7 +56,7 @@ export class ImageBarChart {
           }],
         };
       });
-    })
+    });
 
     effect(() => {
       const images = this.images();
@@ -62,7 +65,20 @@ export class ImageBarChart {
         this.plugins = [this.createBarImagesPlugin(images)];
         this.ready.set(true); // render the chart only once images are available
       });
-    })
+    });
+
+    effect(() => {
+      const percent = this.percent();
+
+      untracked(() => {
+        if (percent) {
+          this.options!.scales = { y: { beginAtZero: true, min: this.min(), max: this.max() ?? 1, grace: '10%', ticks: { format: { style: 'percent' } } } };
+        }
+        else {
+          this.options!.scales = { y: { beginAtZero: true, min: this.min(), max: this.max(), grace: '10%', ticks: { precision: 0 } } };
+        }
+      });
+    });
   }
 
   private createBarImagesPlugin(images: HTMLImageElement[]): Plugin<'bar'> {
