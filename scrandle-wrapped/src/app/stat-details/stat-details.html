@@ -48,3 +48,8 @@
     <h2>Blew It</h2>
     <app-image-bar-chart [items]="blewItCount()" [images]="images()" />
 </div>
+<div>
+    <h2>Teamwork</h2>
+    <app-image-bar-chart [items]="teamworkCount()" [images]="images()" [percent]="percentages()"
+        [max]="percentages() ? 3 : undefined" />
+</div>

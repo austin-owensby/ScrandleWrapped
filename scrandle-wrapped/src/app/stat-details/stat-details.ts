@@ -83,6 +83,14 @@ export class StatDetails {
     } as ImageBarItem)) ?? []).sort((a, b) => a.value - b.value);
   });
 
+  teamworkCount = computed(() => {
+    return (this.statistics()?.PlayerStatistics.map(p => ({
+      label: p.User,
+      value: this.percentages() ? p.TeamworkCount / p.DaysPlayed : p.TeamworkCount,
+      img: p.User + ".png"
+    } as ImageBarItem)) ?? []).sort((a, b) => a.value - b.value);
+  });
+
   scoreDistribution = computed(() => {
     const scoreFrequency = this.statistics()?.PlayerStatistics.find(p => p.User == this.statisticsService.user())?.ScoreFrequency ?? {};
 

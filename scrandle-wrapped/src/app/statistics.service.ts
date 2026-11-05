@@ -51,6 +51,7 @@ export interface PlayerStatistics {
     BeatCommunityCount: number;
     BeatScrandlebotCount: number;
     BlewItCount: number;
+    TeamworkCount: number;
     BestDay: number;
     WorstDay: number;
     BestMatchup: MatchupStatistic;
@@ -61,5 +62,8 @@ export interface PlayerStatistics {
 export interface MatchupStatistic {
     Day: string;
     ItemIndex: number;
-    Difficulty: number;
+    WinnerUrl: string;
+    WinnerRating: number;
+    LoserUrl: string;
+    LoserRating: number;
 }

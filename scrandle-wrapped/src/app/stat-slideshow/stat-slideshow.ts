@@ -3,10 +3,10 @@ import { StatisticsService } from '../statistics.service';
 import { Subscription, tap, timer } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 
 @Component({
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, DatePipe],
   selector: 'app-stat-slideshow',
   styleUrl: './stat-slideshow.css',
   templateUrl: './stat-slideshow.html',
@@ -31,7 +31,7 @@ export class StatSlideshow {
   pageIndex = signal(0);
 
   readonly pageCount = 13;
-  readonly delay = 5000;
+  delay = 5000;
 
   constructor() {
     this.autoAdvancePages();
@@ -44,6 +44,14 @@ export class StatSlideshow {
     }
     else {
       this.subscription?.unsubscribe();
+    }
+
+    // Slow down to show more details
+    if (this.pageIndex() == 10) {
+      this.delay = 10000;
+    }
+    else {
+      this.delay = 5000;
     }
   };
 

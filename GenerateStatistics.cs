@@ -1,11 +1,14 @@
 #!/usr/bin/env dotnet
 
-#:include Models.cs
+#:include Gateways.cs
 
 using System.Collections;
 using System.Collections.Frozen;
 using System.Text.Json;
+using ScrandleWrapped;
 using Models;
+
+ScrandleGateway gateway = new();
 
 string slackFileContents = File.ReadAllText("data/parsed_messages.json");
 List<ParsedMessage> parsedMessages = JsonSerializer.Deserialize(slackFileContents, ScrandleWrappedJsonContext.Default.ListParsedMessage) ?? [];
@@ -50,8 +53,8 @@ foreach (var (user, userMessages) in capsherDictByUser.OrderBy(kp => kp.Key))
         DaysPlayed = userMessages.Count(),
         Average = userMessages.Average(u => u.Score)
     };
-    playerStatistic.BestMatchup.Difficulty = 0;
-    playerStatistic.WorstMatchup.Difficulty = 1;
+    double bestDifficulty = 0;
+    double worstDifficulty = 1;
 
     int currentPerfectStreak = 0;
     DateTime? nextDay = null;
@@ -140,22 +143,32 @@ foreach (var (user, userMessages) in capsherDictByUser.OrderBy(kp => kp.Key))
                 continue;
             }
 
-            if (answerInBits[bitArrayIndex] && difficulty > playerStatistic.BestMatchup.Difficulty)
+            if (answerInBits[bitArrayIndex] && difficulty > bestDifficulty)
             {
+                bestDifficulty = difficulty;
+                List<FoodItem> matchup = parsedMatchupData.First(x => x.Day == messageDay).Data[answerIndex].OrderBy(x => x.Rating).ToList();
                 playerStatistic.BestMatchup = new MatchupStatistic
                 {
                     Day = messageDay,
-                    Difficulty = difficulty,
-                    ItemIndex = answerIndex
+                    ItemIndex = answerIndex,
+                    LoserRating = matchup[0].Rating,
+                    LoserUrl = matchup[0].ImagesNew.First(),
+                    WinnerRating = matchup[1].Rating,
+                    WinnerUrl = matchup[1].ImagesNew.First(),
                 };
             }
-            else if (!answerInBits[bitArrayIndex] && difficulty < playerStatistic.WorstMatchup.Difficulty)
+            else if (!answerInBits[bitArrayIndex] && difficulty < worstDifficulty)
             {
+                worstDifficulty = difficulty;
+                List<FoodItem> matchup = parsedMatchupData.First(x => x.Day == messageDay).Data[answerIndex].OrderBy(x => x.Rating).ToList();
                 playerStatistic.WorstMatchup = new MatchupStatistic
                 {
                     Day = messageDay,
-                    Difficulty = difficulty,
-                    ItemIndex = answerIndex
+                    ItemIndex = answerIndex,
+                    LoserRating = matchup[0].Rating,
+                    LoserUrl = matchup[0].ImagesNew.First(),
+                    WinnerRating = matchup[1].Rating,
+                    WinnerUrl = matchup[1].ImagesNew.First(),
                 };
             }
         }

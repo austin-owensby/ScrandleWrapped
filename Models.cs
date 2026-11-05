@@ -1,4 +1,3 @@
-using System.Collections.Frozen;
 using System.Text.Json.Serialization;
 
 namespace Models;
@@ -99,8 +98,9 @@ public class MatchupDayData
 
 public class FoodItem
 {
-    // We only care about the rating
+    // We only care about the rating and Image URL
     public double Rating { get; set; }
+    public List<string> ImagesNew { get; set; } = [];
 }
 
 // Output stats
@@ -156,7 +156,10 @@ class MatchupStatistic
 {
     public DateOnly Day { get; set; } = DateOnly.MinValue;
     public int ItemIndex { get; set; }
-    public double Difficulty { get; set; }
+    public string WinnerUrl { get; set; } = string.Empty;
+    public double WinnerRating { get; set; }
+    public string LoserUrl { get; set; } = string.Empty;
+    public double LoserRating { get; set; }
 }
 
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower)]

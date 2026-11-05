@@ -25,7 +25,7 @@
     Capsher's Best Performing Day
 </h1>
 <h2>
-    {{statistics()?.CapsherEasiestDay}}
+    {{statistics()?.CapsherEasiestDay | date}}
 </h2>
 <!-- (Include the average score and if we have space, individual's scores, maybe even a Slack
 message or 2 someone sent about that day) -->
@@ -35,7 +35,7 @@ message or 2 someone sent about that day) -->
     Capsher's Worst Performing Day
 </h1>
 <h2>
-    {{statistics()?.CapsherHardestDay}}
+    {{statistics()?.CapsherHardestDay | date}}
 </h2>
 <!-- (Include the average score and if we have space, individual's scores, maybe even a Slack
 message or 2 someone sent about that day) -->
@@ -66,7 +66,7 @@ message or 2 someone sent about that day) -->
     {{user()}}'s Best Performing Day
 </h1>
 <h2>
-    {{userStatistics()?.BestDay}}
+    {{userStatistics()?.BestDay | date}}
 </h2>
 <!-- User's best performing day (Include Capsher + Community average, Scrandlebot's prediction, and the user's score +
 answers, include a Slack message if relevant) -->
@@ -76,7 +76,7 @@ answers, include a Slack message if relevant) -->
     {{user()}}'s Worst Performing Day
 </h1>
 <h2>
-    {{userStatistics()?.WorstDay}}
+    {{userStatistics()?.WorstDay | date}}
 </h2>
 <!-- User's worst performing day (Include Capsher + Community average, Scrandlebot's prediction, and the user's score +
 answers, include a Slack message if relevant) -->
@@ -86,9 +86,22 @@ answers, include a Slack message if relevant) -->
     {{user()}}'s Best Performing Matchup
 </h1>
 <h2>
-    {{userStatistics()?.BestMatchup?.Day}}
-    {{userStatistics()?.BestMatchup?.ItemIndex ?? 0 + 1}}
+    {{userStatistics()?.BestMatchup?.Day | date}}
 </h2>
+<div class="matchup">
+    <div>
+        <div>
+            {{userStatistics()?.BestMatchup?.LoserRating}}
+            <img [src]="userStatistics()?.BestMatchup?.LoserUrl" />
+        </div>
+    </div>
+    <div>
+        <div>
+            {{userStatistics()?.BestMatchup?.WinnerRating}}
+            <img [src]="userStatistics()?.BestMatchup?.WinnerUrl" />
+        </div>
+    </div>
+</div>
 <!-- User's most skilled matchup (Include pictures and ratings of the specific matchup) -->
 }
 @case (11) {
@@ -96,9 +109,22 @@ answers, include a Slack message if relevant) -->
     {{user()}}'s Worst Performing Matchup
 </h1>
 <h2>
-    {{userStatistics()?.WorstMatchup?.Day}}
-    {{userStatistics()?.WorstMatchup?.ItemIndex ?? 0 + 1}}
+    {{userStatistics()?.WorstMatchup?.Day | date}}
 </h2>
+<div class="matchup">
+    <div>
+        <div>
+            {{userStatistics()?.WorstMatchup?.LoserRating}}
+            <img [src]="userStatistics()?.WorstMatchup?.LoserUrl" />
+        </div>
+    </div>
+    <div>
+        <div>
+            {{userStatistics()?.WorstMatchup?.WinnerRating}}
+            <img [src]="userStatistics()?.WorstMatchup?.WinnerUrl" />
+        </div>
+    </div>
+</div>
 <!-- User's least skilled matchup (Include pictures and ratings of the specific matchup) -->
 }
 @case (12) {
