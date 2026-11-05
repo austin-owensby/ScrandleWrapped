@@ -28,17 +28,16 @@ var scrandlebotDataDict = scrandlebotData.ToFrozenDictionary(ks => ks.Day);
 
 Statistics statistics = new();
 
-var capsherDates = parsedMessages.GroupBy(m => m.Timestamp.Date).ToList();
+var capsherDates = parsedMessages.GroupBy(m => DateOnly.FromDateTime(m.Timestamp.Date)).ToList();
+var capsherAveragePerDay = capsherDates.ToFrozenDictionary(g => g.Key, g => g.ToList().Average(m => m.Score));
 statistics.DaysPlayed = capsherDates.Count;
 statistics.CapsherAverage = parsedMessages.Average(m => m.Score);
 statistics.CommunityAverage = parsedCommunityData.Average(d => d.Avg);
 statistics.ScrandlebotAverage = scrandlebotData.Average(d => d.Prediction);
-statistics.CapsherAveragePerDay = capsherDates.ToFrozenDictionary(g => g.Key, g => g.ToList().Average(m => m.Score));
-statistics.CommunityAveragePerDay = communityDataDict.ToFrozenDictionary(kp => kp.Key, kp => kp.Value.Avg);
-statistics.DaysCapsherBeatCommunity = statistics.CapsherAveragePerDay.Count(cday => cday.Value > communityDataDict[DateOnly.FromDateTime(cday.Key)].Avg);
-statistics.DaysCapsherBeatScrandlebot = statistics.CapsherAveragePerDay.Count(cday => cday.Value > (scrandlebotDataDict.ContainsKey(DateOnly.FromDateTime(cday.Key)) ? scrandlebotDataDict[DateOnly.FromDateTime(cday.Key)].Prediction : 0));
-statistics.CapsherHardestDay = DateOnly.FromDateTime(statistics.CapsherAveragePerDay.MinBy(kp => kp.Value).Key);
-statistics.CapsherEasiestDay = DateOnly.FromDateTime(statistics.CapsherAveragePerDay.MaxBy(kp => kp.Value).Key);
+statistics.DaysCapsherBeatCommunity = capsherAveragePerDay.Count(cday => cday.Value > communityDataDict[cday.Key].Avg);
+statistics.DaysCapsherBeatScrandlebot = capsherAveragePerDay.Count(cday => cday.Value > (scrandlebotDataDict.TryGetValue(cday.Key, out ScrandlebotPrediction? value) ? value.Prediction : 0));
+statistics.CapsherHardestDay = capsherAveragePerDay.MinBy(kp => kp.Value).Key;
+statistics.CapsherEasiestDay = capsherAveragePerDay.MaxBy(kp => kp.Value).Key;
 statistics.CommunityHardestDay = parsedCommunityData.MinBy(kp => kp.Avg)!.Day;
 statistics.CommunityEasiestDay = parsedCommunityData.MaxBy(kp => kp.Avg)!.Day;
 
@@ -81,7 +80,7 @@ foreach (var (user, userMessages) in capsherDictByUser.OrderBy(kp => kp.Key))
 
         playerStatistic.ScoreFrequency[message.Score]++;
 
-        if (message.Score > statistics.CapsherAveragePerDay[message.Timestamp.Date])
+        if (message.Score > capsherAveragePerDay[DateOnly.FromDateTime(message.Timestamp.Date)])
         {
             playerStatistic.BeatCapsherAverage++;
         }

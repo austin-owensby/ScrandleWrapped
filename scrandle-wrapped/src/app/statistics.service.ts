@@ -32,8 +32,6 @@ export interface Statistics {
     CapsherAverage: number;
     CommunityAverage: number;
     ScrandlebotAverage: number;
-    CapsherAveragePerDay: { [date: string]: number }[];
-    CommunityAveragePerDay: { [date: string]: number }[];
     DaysCapsherBeatCommunity: number;
     DaysCapsherBeatScrandlebot: number;
     CapsherHardestDay: string;
@@ -57,7 +55,7 @@ export interface PlayerStatistics {
     WorstDay: number;
     BestMatchup: MatchupStatistic;
     WorstMatchup: MatchupStatistic;
-    ScoreFrequency: { [score: number]: number }[];
+    ScoreFrequency: { [score: string]: number };
 }
 
 export interface MatchupStatistic {

@@ -1,6 +1,20 @@
+<header>
+    <label for="percentages">Percentages</label>
+    <input id="percentages" type="checkbox" [(ngModel)]="percentages" />
+    <button (click)="downloadStatistics()">Download Statistics</button>
+    <button (click)="downloadRawData()">Download Raw Data</button>
+</header>
+<hr />
+<p>Capsher Total Days Played: {{statistics()?.DaysPlayed}}</p>
+<p>Capsher Average: {{statistics()?.CapsherAverage | number}}</p>
+<p>Community Average: {{statistics()?.CommunityAverage | number}}</p>
+<p>Scrandlebot Average: {{statistics()?.ScrandlebotAverage | number}}</p>
+<p>Days Capsher Beat Community: {{statistics()?.DaysCapsherBeatCommunity}}</p>
+<p>Days Capsher Beat Scrandlebot: {{statistics()?.DaysCapsherBeatScrandlebot}}</p>
+<hr />
 <div>
-    <label>Percentages</label>
-    <input type="checkbox" [(ngModel)]="percentages" />
+    <h2>{{user()}}'s Score Distribution</h2>
+    <app-bar-chart [items]="scoreDistribution()"></app-bar-chart>
 </div>
 <div>
     <h2>Days Played</h2>
@@ -32,20 +46,5 @@
 </div>
 <div>
     <h2>Blew It</h2>
-    <app-image-bar-chart [items]="bestPerfectStreak()" [images]="images()" />
+    <app-image-bar-chart [items]="blewItCount()" [images]="images()" />
 </div>
-
-
-<!--
-TODO
-Show all the stats we've collected
-
-Show a line graph comparing Capsher average, Community Average, Scrandlebot prediction, and user answers
-Show a bar graph using users' profile pics, highlighting the current user's stats
-Give the option to switch between total vs. percent stats (Default to percent) (Not all stats will make sense for a
-percent)
-Give the option to export the parsed messages and statistics
-
-Right now I'm thinking we show all the graphs at once. That way the user can quickly see which stats they're at the top
-of
--->

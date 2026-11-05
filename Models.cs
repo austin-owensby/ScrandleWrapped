@@ -111,8 +111,6 @@ class Statistics
     public double CapsherAverage { get; set; }
     public double CommunityAverage { get; set; }
     public double ScrandlebotAverage { get; set; }
-    public FrozenDictionary<DateTime, double> CapsherAveragePerDay { get; set; } = [];
-    public FrozenDictionary<DateOnly, double> CommunityAveragePerDay { get; set; } = [];
     public int DaysCapsherBeatCommunity { get; set; }
     public int DaysCapsherBeatScrandlebot { get; set; }
     public DateOnly CapsherHardestDay { get; set; } = new();

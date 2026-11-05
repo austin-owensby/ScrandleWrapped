@@ -2,9 +2,11 @@ import { Component, computed, effect, inject, signal, untracked } from '@angular
 import { StatisticsService } from '../statistics.service';
 import { ImageBarChart, ImageBarItem } from '../image-bar-chart/image-bar-chart';
 import { FormsModule } from '@angular/forms';
+import { BarChart, BarItem } from '../bar-chart/bar-chart';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
-  imports: [ImageBarChart, FormsModule],
+  imports: [ImageBarChart, FormsModule, BarChart, DecimalPipe],
   selector: 'app-stat-details',
   styleUrl: './stat-details.css',
   templateUrl: './stat-details.html',
@@ -12,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class StatDetails {
   statisticsService = inject(StatisticsService);
   statistics = this.statisticsService.statistics;
+  user = this.statisticsService.user;
   images = signal<HTMLImageElement[]>([]);
 
   percentages = signal<boolean>(true);
@@ -80,6 +83,15 @@ export class StatDetails {
     } as ImageBarItem)) ?? []).sort((a, b) => a.value - b.value);
   });
 
+  scoreDistribution = computed(() => {
+    const scoreFrequency = this.statistics()?.PlayerStatistics.find(p => p.User == this.statisticsService.user())?.ScoreFrequency ?? {};
+
+    return Object.keys(scoreFrequency).map(key => ({
+      label: key,
+      value: scoreFrequency[key]
+    }) as BarItem);
+  });
+
   constructor() {
     effect(() => {
       const users = this.statisticsService.statistics()?.PlayerStatistics?.map(p => p.User) ?? [];
@@ -91,12 +103,29 @@ export class StatDetails {
     });
   }
 
-  private load(src: string): Promise<HTMLImageElement> {
+  private load = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve(img);
       img.onerror = reject;
       img.src = src;
     });
+  }
+
+  downloadStatistics = () => {
+    this.downloadFile('statistics.json', 'statistics.json');
+  }
+
+  downloadRawData = () => {
+    this.downloadFile('slack_messages.json', 'raw_data.json');
+  }
+
+  private downloadFile = (url: string, filename: string) => {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 }
