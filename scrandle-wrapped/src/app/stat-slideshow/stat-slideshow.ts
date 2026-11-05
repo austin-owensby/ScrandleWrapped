@@ -1,11 +1,12 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { StatisticsService } from '../statistics.service';
 import { Subscription, tap, timer } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
-  imports: [],
+  imports: [DecimalPipe],
   selector: 'app-stat-slideshow',
   styleUrl: './stat-slideshow.css',
   templateUrl: './stat-slideshow.html',
@@ -17,6 +18,15 @@ export class StatSlideshow {
   subscription: Subscription | null = null;
 
   user = this.statisticsService.user;
+  statistics = this.statisticsService.statistics;
+
+  userStatistics = computed(() => {
+    return this.statistics()?.PlayerStatistics?.find(p => p.User == this.user());
+  });
+
+  isLastPage = computed(() => {
+    return this.pageIndex() + 1 == this.pageCount;
+  });
 
   pageIndex = signal(0);
 
