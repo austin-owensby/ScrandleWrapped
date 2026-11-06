@@ -1,5 +1,16 @@
-<select [(ngModel)]="selectedUser" (change)="selectUser()">
-    @for(user of users(); track user) {
-    <option>{{user}}</option>
-    }
-</select>
+<main class="landing">
+    <div class="sticker">2026 season</div>
+    <p class="eyebrow">The annual</p>
+    <h1>Scrandle<br><span>Wrapped</span></h1>
+    <p class="intro">A highlight reel of bold picks, bad beats, and stadium snacks.</p>
+    <section class="picker-card">
+        <label for="player">Who are we scrandling?</label>
+        <select id="player" [(ngModel)]="selectedUser">
+            @for(user of users(); track user) {
+            <option>{{user}}</option>
+            }
+        </select>
+        <button class="primary-button" (click)="selectUser()">Serve up my stats <span>→</span></button>
+    </section>
+    <p class="tiny-note">No napkins required. <span>✦</span></p>
+</main>

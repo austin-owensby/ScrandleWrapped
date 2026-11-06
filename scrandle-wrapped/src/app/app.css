@@ -1,0 +1,27 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+:host::before,
+:host::after {
+  position: fixed;
+  z-index: -1;
+  width: 10rem;
+  height: 10rem;
+  border: 3px solid rgba(255, 212, 71, .45);
+  border-radius: 50%;
+  content: '';
+  transform: rotate(20deg);
+}
+
+:host::before {
+  top: -4rem;
+  right: -3rem;
+}
+
+:host::after {
+  bottom: -5rem;
+  left: -4rem;
+  border-color: rgba(99, 193, 116, .35);
+}

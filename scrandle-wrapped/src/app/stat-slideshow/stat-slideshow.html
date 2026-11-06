@@ -1,138 +1,149 @@
 @switch (pageIndex()) {
 @case (0) {
-<h1>
-    Capsher's Stats
-</h1>
+<div class="slide-content">
+    <p class="eyebrow">The headliner</p>
+    <h1>Capsher's Stats</h1>
+    <p class="slide-kicker">Let's see how the legend stacks up.</p>
+</div>
 }
 @case (1) {
-<h1>
-    Total Days Capsher Played
-</h1>
-<h2>
-    {{statistics()?.DaysPlayed}}
-</h2>
+<div class="slide-content">
+    <p class="eyebrow">Big commitment</p>
+    <h1>Total Days Capsher Played</h1>
+    <h2 class="hero-number">{{statistics()?.DaysPlayed | number:'1.0-0'}}</h2>
+</div>
 }
 @case (2) {
-<h1>
-    Days Capsher Average Beat Community Average
-</h1>
-<h2>
-    {{statistics()?.DaysCapsherBeatCommunity}}
-</h2>
+<div class="slide-content">
+    <p class="eyebrow">Crowd favorite</p>
+    <h1>Days Capsher Average Beat Community Average</h1>
+    <h2 class="hero-number">{{statistics()?.DaysCapsherBeatCommunity | number:'1.0-0'}}</h2>
+</div>
 }
 @case (3) {
-<h1>
-    Capsher's Best Performing Day
-</h1>
-<h2>
-    {{statistics()?.CapsherEasiestDay | date}}
-</h2>
+<div class="slide-content">
+    <p class="eyebrow">Peak performance</p>
+    <h1>Capsher's Best Performing Day</h1>
+    <h2 class="hero-number">{{statistics()?.CapsherEasiestDay | date}}</h2>
+</div>
 <!-- (Include the average score and if we have space, individual's scores, maybe even a Slack
 message or 2 someone sent about that day) -->
 }
 @case (4) {
-<h1>
-    Capsher's Worst Performing Day
-</h1>
-<h2>
-    {{statistics()?.CapsherHardestDay | date}}
-</h2>
+<div class="slide-content">
+    <p class="eyebrow">The villain arc</p>
+    <h1>Capsher's Worst Performing Day</h1>
+    <h2 class="hero-number">{{statistics()?.CapsherHardestDay | date}}</h2>
+</div>
 <!-- (Include the average score and if we have space, individual's scores, maybe even a Slack
 message or 2 someone sent about that day) -->
 }
 @case (5) {
-<h1>
-    {{user()}}'s Stats
-</h1>
+<div class="slide-content">
+    <p class="eyebrow">Now batting</p>
+    <h1>{{user()}}'s Stats</h1>
+    <p class="slide-kicker">Your snacks. Your strategy. Your scoreboard.</p>
+</div>
 }
 @case (6) {
-<h1>
-    {{user()}}'s Days Played
-</h1>
-<h2>
-    {{userStatistics()?.DaysPlayed}}
-</h2>
+<div class="slide-content">
+    <p class="eyebrow">Attendance award</p>
+    <h1>{{user()}}'s Days Played</h1>
+    <h2 class="hero-number">{{userStatistics()?.DaysPlayed | number:'1.0-0'}}</h2>
+</div>
 }
 @case (7) {
-<h1>
-    {{user()}}'s Average
-</h1>
-<h2>
-    {{userStatistics()?.Average | number }}
-</h2>
+<div class="slide-content">
+    <p class="eyebrow">The season average</p>
+    <h1>{{user()}}'s Average</h1>
+    <h2 class="hero-number">{{userStatistics()?.Average | number:'1.2-2' }}</h2>
+</div>
 }
 @case (8) {
-<h1>
-    {{user()}}'s Best Performing Day
-</h1>
-<h2>
-    {{userStatistics()?.BestDay | date}}
-</h2>
+<div class="slide-content">
+    <p class="eyebrow">A five-star feast</p>
+    <h1>{{user()}}'s Best Performing Day</h1>
+    <h2 class="hero-number">{{userStatistics()?.BestDay | date}}</h2>
+</div>
 <!-- User's best performing day (Include Capsher + Community average, Scrandlebot's prediction, and the user's score +
 answers, include a Slack message if relevant) -->
 }
 @case (9) {
-<h1>
-    {{user()}}'s Worst Performing Day
-</h1>
-<h2>
-    {{userStatistics()?.WorstDay | date}}
-</h2>
+<div class="slide-content">
+    <p class="eyebrow">The dropped nacho</p>
+    <h1>{{user()}}'s Worst Performing Day</h1>
+    <h2 class="hero-number">{{userStatistics()?.WorstDay | date}}</h2>
+</div>
 <!-- User's worst performing day (Include Capsher + Community average, Scrandlebot's prediction, and the user's score +
 answers, include a Slack message if relevant) -->
 }
 @case (10) {
-<h1>
-    {{user()}}'s Best Performing Matchup
-</h1>
-<h2>
-    {{userStatistics()?.BestMatchup?.Day | date}}
-</h2>
-<div class="matchup">
-    <div>
+<div class="slide-content">
+    <p class="eyebrow">Head-to-head</p>
+    <h1>
+        {{user()}}'s Best Performing Matchup
+    </h1>
+    <h2>
+        {{userStatistics()?.BestMatchup?.Day | date}}
+    </h2>
+    <div class="matchup">
         <div>
-            {{userStatistics()?.BestMatchup?.LoserRating}}
-            <img [src]="userStatistics()?.BestMatchup?.LoserUrl" />
+            <div>
+                {{userStatistics()?.BestMatchup?.LoserRating | number:'1.2-2'}}%
+                <img [src]="userStatistics()?.BestMatchup?.LoserUrl" />
+            </div>
         </div>
-    </div>
-    <div>
         <div>
-            {{userStatistics()?.BestMatchup?.WinnerRating}}
-            <img [src]="userStatistics()?.BestMatchup?.WinnerUrl" />
+            <div>
+                {{userStatistics()?.BestMatchup?.WinnerRating | number:'1.2-2'}}%
+                <img [src]="userStatistics()?.BestMatchup?.WinnerUrl" />
+            </div>
         </div>
     </div>
 </div>
 <!-- User's most skilled matchup (Include pictures and ratings of the specific matchup) -->
 }
 @case (11) {
-<h1>
-    {{user()}}'s Worst Performing Matchup
-</h1>
-<h2>
-    {{userStatistics()?.WorstMatchup?.Day | date}}
-</h2>
-<div class="matchup">
-    <div>
+<div class="slide-content">
+    <p class="eyebrow">Head-to-head</p>
+    <h1>
+        {{user()}}'s Worst Performing Matchup
+    </h1>
+    <h2>
+        {{userStatistics()?.WorstMatchup?.Day | date}}
+    </h2>
+    <div class="matchup">
         <div>
-            {{userStatistics()?.WorstMatchup?.LoserRating}}
-            <img [src]="userStatistics()?.WorstMatchup?.LoserUrl" />
+            <div>
+                {{userStatistics()?.WorstMatchup?.LoserRating | number:'1.2-2'}}%
+                <img [src]="userStatistics()?.WorstMatchup?.LoserUrl" />
+            </div>
         </div>
-    </div>
-    <div>
         <div>
-            {{userStatistics()?.WorstMatchup?.WinnerRating}}
-            <img [src]="userStatistics()?.WorstMatchup?.WinnerUrl" />
+            <div>
+                {{userStatistics()?.WorstMatchup?.WinnerRating | number:'1.2-2'}}%
+                <img [src]="userStatistics()?.WorstMatchup?.WinnerUrl" />
+            </div>
         </div>
     </div>
 </div>
 <!-- User's least skilled matchup (Include pictures and ratings of the specific matchup) -->
 }
 @case (12) {
-<h1>{{user()}}'s Superlative</h1>
+<div class="slide-content">
+    <p class="eyebrow">And the award goes to...</p>
+    <h1>{{user()}}'s Superlative</h1>
+</div>
 }
 }
 
-<footer>
+<footer class="slide-controls">
+    @if(!isLastPage()) {
+    <div class="slide-progress" role="progressbar" aria-label="Time until next slide"
+        [attr.aria-valuenow]="progress() * 100">
+        <div class="slide-progress-bar" [style.width.%]="progress() * 100"></div>
+    </div>
+    }
     @if(pageIndex() > 0) {
     <button (click)="backPage()">Previous</button>
     }
@@ -140,7 +151,6 @@ answers, include a Slack message if relevant) -->
     <button (click)="nextPage()">Next</button>
     }
     @else {
-    <button>Share</button>
     <button (click)="goToStatistics()">Details</button>
     }
 </footer>

@@ -1,0 +1,116 @@
+.landing {
+    position: relative;
+    max-width: 46rem;
+    min-height: 100vh;
+    padding: 8rem 2rem 4rem;
+    margin: 0 auto;
+    color: var(--cream);
+}
+
+.sticker {
+    display: inline-block;
+    padding: .6rem .9rem;
+    color: var(--ink);
+    background: var(--yellow);
+    box-shadow: 4px 4px 0 var(--red);
+    font-weight: 800;
+    text-transform: uppercase;
+    transform: rotate(-4deg);
+}
+
+.eyebrow {
+    margin: 4rem 0 .4rem;
+    color: var(--green);
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+}
+
+h1 {
+    color: var(--cream);
+    font-size: clamp(3.2rem, 11vw, 7rem);
+    line-height: .96;
+    text-shadow: 7px 7px 0 var(--red);
+}
+
+h1 span {
+    color: var(--yellow);
+}
+
+.intro {
+    max-width: 28rem;
+    margin: 1.8rem 0 2rem;
+    color: #d7cce3;
+    font-size: 1.15rem;
+    line-height: 1.5;
+}
+
+.picker-card {
+    display: grid;
+    gap: .75rem;
+    max-width: 26rem;
+    padding: 1.5rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 8px 8px 0 var(--blue);
+    transform: rotate(1deg);
+}
+
+label {
+    font-size: .82rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+select {
+    width: 100%;
+    padding: .85rem 1rem;
+    color: var(--ink);
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 0;
+    font-weight: 700;
+}
+
+.primary-button {
+    padding: 1rem 1.1rem;
+    color: var(--paper);
+    background: var(--red);
+    border: 2px solid var(--ink);
+    font-weight: 800;
+    text-align: left;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.primary-button span {
+    float: right;
+    font-size: 1.3rem;
+}
+
+.primary-button:hover {
+    box-shadow: 4px 4px 0 var(--ink);
+    transform: translate(-2px, -2px);
+}
+
+.tiny-note {
+    margin-top: 2rem;
+    color: #a99bb8;
+    font-size: .85rem;
+}
+
+.tiny-note span {
+    color: var(--yellow);
+}
+
+@media (max-width: 36rem) {
+    .landing {
+        padding: 4rem 1.25rem 3rem;
+    }
+
+    .eyebrow {
+        margin-top: 3rem;
+    }
+}

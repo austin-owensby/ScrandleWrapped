@@ -25,6 +25,7 @@ export class ImageBarChart {
   percent = input<boolean>(false);
   min = input<number>();
   max = input<number>();
+  step = input<number>();
   user = this.statisticsService.user;
 
   data: ChartConfiguration<'bar'>['data'] = {
@@ -35,9 +36,38 @@ export class ImageBarChart {
   options: ChartConfiguration<'bar'>['options'] = {
     responsive: true,
     maintainAspectRatio: false,
-    layout: { padding: { top: 120 } },
-    plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero: true, min: this.min(), max: this.max() ?? 1, grace: '10%', ticks: { format: { style: 'percent' } } } },
+    layout: { padding: { top: 165, right: 12 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#201b31',
+        titleFont: { family: 'DM Sans', weight: 700 },
+        bodyFont: { family: 'DM Sans' },
+        displayColors: false,
+        padding: 12,
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: '#695b72', font: { family: 'DM Sans', weight: 700 } },
+      },
+      y: {
+        beginAtZero: true,
+        min: this.min(),
+        max: this.max() ?? 1,
+        grace: '10%',
+        grid: { color: 'rgba(32, 27, 49, .12)', tickLength: 0 },
+        ticks: {
+          color: '#695b72',
+          padding: 8,
+          font: { family: 'DM Sans', weight: 700 },
+          precision: 0,
+          stepSize: this.step() ?? 1,
+          format: { style: 'percent' },
+        },
+      },
+    },
   };
 
   plugins: Plugin<'bar'>[] = [];
@@ -51,8 +81,11 @@ export class ImageBarChart {
           labels: items.map(i => i.label),
           datasets: [{
             data: items.map(i => i.value),
-            borderWidth: 1,
-            backgroundColor: items.map(i => i.label == this.user() ? 'red' : undefined)
+            borderWidth: 2,
+            borderColor: '#201b31',
+            borderRadius: 5,
+            borderSkipped: false,
+            backgroundColor: items.map((i, index) => i.label == this.user() ? '#f04e3e' : ['#d8d1dc', '#c8c0ce', '#b8adbf', '#a79ab0', '#96889f'][index % 5])
           }],
         };
       });
@@ -69,14 +102,47 @@ export class ImageBarChart {
 
     effect(() => {
       const percent = this.percent();
+      const min = this.min();
+      const max = this.max();
+      const step = this.step();
 
       untracked(() => {
-        if (percent) {
-          this.options!.scales = { y: { beginAtZero: true, min: this.min(), max: this.max() ?? 1, grace: '10%', ticks: { format: { style: 'percent' } } } };
-        }
-        else {
-          this.options!.scales = { y: { beginAtZero: true, min: this.min(), max: this.max(), grace: '10%', ticks: { precision: 0 } } };
-        }
+        this.options = {
+          ...this.options,
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: '#695b72', font: { family: 'DM Sans', weight: 700 } }
+            },
+            y: {
+              beginAtZero: true,
+              min,
+              max: percent ? (max ?? 1) : max,
+              grace: '10%',
+              grid: { color: 'rgba(32, 27, 49, .12)', tickLength: 0 },
+              ticks: {
+                color: '#695b72',
+                padding: 8,
+                font: { family: 'DM Sans', weight: 700 },
+                callback: (value: string | number) => percent
+                  ? `${Math.round(Number(value) * 100)}%`
+                  : `${Math.round(Number(value))}`
+              },
+              afterBuildTicks: (scale) => {
+                const lowerBound = min ?? 0;
+                const upperBound = max ?? scale.max;
+                const interval = step ?? (percent ? 0.2 : 1);
+                const tickValues: number[] = [];
+
+                for (let value = lowerBound; value <= upperBound + interval / 10; value += interval) {
+                  tickValues.push(Number(value.toFixed(10)));
+                }
+
+                scale.ticks = tickValues.map(value => ({ value }));
+              }
+            }
+          }
+        };
       });
     });
   }
@@ -96,8 +162,8 @@ export class ImageBarChart {
             { x: number; y: number; base: number; width: number };
           const isNegative = y > base;
 
-          // Full image scaled to the bar's width, aspect ratio preserved
-          const drawW = width;
+          // Give each avatar enough room to remain recognizable above its bar.
+          const drawW = Math.min(width * 1.65, (chart.chartArea.width / this.data.labels!.length) * 1.2);
           const drawH = drawW * (img.naturalHeight / img.naturalWidth);
           const drawX = x - drawW / 2;
 

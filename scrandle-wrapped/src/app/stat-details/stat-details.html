@@ -1,55 +1,60 @@
-<header>
-    <label for="percentages">Percentages</label>
-    <input id="percentages" type="checkbox" [(ngModel)]="percentages" />
-    <button (click)="downloadStatistics()">Download Statistics</button>
-    <button (click)="downloadRawData()">Download Raw Data</button>
+<header class="details-header">
+    <div><p class="eyebrow">The full menu</p><h1>{{user()}}'s Stats</h1></div>
+    <div class="header-actions">
+        <label class="percentage-toggle" for="percentages"><input id="percentages" type="checkbox" [(ngModel)]="percentages" /> Show percentages</label>
+        <button (click)="downloadStatistics()">Download Stats</button>
+        <button (click)="downloadRawData()">Raw Data</button>
+    </div>
 </header>
-<hr />
-<p>Capsher Total Days Played: {{statistics()?.DaysPlayed}}</p>
-<p>Capsher Average: {{statistics()?.CapsherAverage | number}}</p>
-<p>Community Average: {{statistics()?.CommunityAverage | number}}</p>
-<p>Scrandlebot Average: {{statistics()?.ScrandlebotAverage | number}}</p>
-<p>Days Capsher Beat Community: {{statistics()?.DaysCapsherBeatCommunity}}</p>
-<p>Days Capsher Beat Scrandlebot: {{statistics()?.DaysCapsherBeatScrandlebot}}</p>
-<hr />
-<div>
+<section class="summary-grid">
+    <p><strong>{{statistics()?.DaysPlayed | number:'1.2-2'}}</strong><span>Capsher days played</span></p>
+    <p><strong>{{statistics()?.CapsherAverage | number:'1.2-2'}}</strong><span>Capsher average</span></p>
+    <p><strong>{{statistics()?.CommunityAverage | number:'1.2-2'}}</strong><span>Community average</span></p>
+    <p><strong>{{statistics()?.ScrandlebotAverage | number:'1.2-2'}}</strong><span>Scrandlebot average</span></p>
+</section>
+<div class="chart-grid">
+<section class="chart-card chart-card-wide">
     <h2>{{user()}}'s Score Distribution</h2>
     <app-bar-chart [items]="scoreDistribution()"></app-bar-chart>
-</div>
-<div>
+</section>
+<section class="chart-card">
     <h2>Days Played</h2>
-    <app-image-bar-chart [items]="daysPlayed()" [images]="images()" />
-</div>
-<div>
+    <app-image-bar-chart [items]="daysPlayed()" [images]="images()" [step]="5" />
+</section>
+<section class="chart-card">
     <h2>Average</h2>
-    <app-image-bar-chart [items]="playerAverage()" [images]="images()" [min]="6" , [max]="10" />
-</div>
-<div>
+    <app-image-bar-chart [items]="playerAverage()" [images]="images()" [min]="6" [max]="10" [step]="1" />
+</section>
+<section class="chart-card">
     <h2>Best Streak</h2>
-    <app-image-bar-chart [items]="bestStreak()" [images]="images()" />
-</div>
-<div>
+    <app-image-bar-chart [items]="bestStreak()" [images]="images()" [step]="5" />
+</section>
+<section class="chart-card">
     <h2>Best Perfect Streak</h2>
     <app-image-bar-chart [items]="bestPerfectStreak()" [images]="images()" />
-</div>
-<div>
+</section>
+<section class="chart-card">
     <h2>Beat Capsher Average</h2>
-    <app-image-bar-chart [items]="beatCapsherAverage()" [images]="images()" [percent]="percentages()" />
-</div>
-<div>
+    <app-image-bar-chart [items]="beatCapsherAverage()" [images]="images()" [percent]="percentages()"
+        [step]="percentages() ? 0.2 : 5" />
+</section>
+<section class="chart-card">
     <h2>Beat Community Average</h2>
-    <app-image-bar-chart [items]="beatCommunityAverage()" [images]="images()" [percent]="percentages()" />
-</div>
-<div>
+    <app-image-bar-chart [items]="beatCommunityAverage()" [images]="images()" [percent]="percentages()"
+        [step]="percentages() ? 0.2 : 5" />
+</section>
+<section class="chart-card">
     <h2>Beat Scrandlebot</h2>
-    <app-image-bar-chart [items]="beatScrandlebot()" [images]="images()" [percent]="percentages()" />
-</div>
-<div>
+    <app-image-bar-chart [items]="beatScrandlebot()" [images]="images()" [percent]="percentages()"
+        [step]="percentages() ? 0.2 : 5" />
+</section>
+<section class="chart-card">
     <h2>Blew It</h2>
     <app-image-bar-chart [items]="blewItCount()" [images]="images()" />
-</div>
-<div>
+</section>
+<section class="chart-card">
     <h2>Teamwork</h2>
     <app-image-bar-chart [items]="teamworkCount()" [images]="images()" [percent]="percentages()"
-        [max]="percentages() ? 3 : undefined" />
+        [step]="percentages() ? 0.2 : 5" [max]="percentages() ? 3 : undefined" />
+</section>
 </div>
